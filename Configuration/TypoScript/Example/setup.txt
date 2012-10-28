@@ -1,0 +1,28 @@
+
+/**
+ * plugin.tx_adxless
+ */
+plugin.tx_adxless {
+
+	// cObject
+	compile = FILE
+	compile.file = EXT:adx_less/Resources/Private/Example/Styles.less
+
+	// string (lessjs, compressed, classic)
+	formatter = lessjs
+	// integer
+	preserveComments = 1
+
+	// array
+	variables {
+		// string/stdWrap
+		nice-blue = #5B83AD
+		light-blue = @nice-blue + #111
+	}
+
+#	// array (not implemented yet)
+#	importDirectories {
+#		// string/stdWrap
+#		1 =
+#	}
+}
