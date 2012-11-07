@@ -6,7 +6,7 @@ plugin.tx_adxless {
 
 	// cObject
 	compile = FILE
-	compile.file = EXT:adx_less/Resources/Private/Example/Styles.less
+	compile.file = EXT:adx_less/Resources/Private/CSS/Example.less
 
 	// string (lessjs, compressed, classic)
 	formatter = lessjs

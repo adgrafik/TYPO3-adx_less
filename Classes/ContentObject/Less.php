@@ -1,6 +1,6 @@
 <?php
 
-include_once('../LESSPHP/lessc.inc.php');
+include_once(t3lib_extMgm::extPath('adx_less') . 'Classes/LESSPHP/lessc.inc.php');
 
 class Tx_AdxLess_ContentObject_Less implements tslib_content_cObjGetSingleHook {
 
@@ -25,26 +25,26 @@ class Tx_AdxLess_ContentObject_Less implements tslib_content_cObjGetSingleHook {
 			$less->setPreserveComments((boolean) $configuration['preserveComments']);
 		}
 
-		if (count((array) $configuration['variables'])) {
+		if (count((array) $configuration['variables.'])) {
 
 			$variables = array();
-			foreach ($configuration['variables'] as $key => $value) {
+			foreach ($configuration['variables.'] as $key => $value) {
 
-				$variables[$key] = isset($configuration['variables'][$key . '.'])
-					? $parentObject->stdWrap($configuration['variables'][$key], $configuration['variables'][$key . '.'])
+				$variables[$key] = isset($configuration['variables.'][$key . '.'])
+					? $parentObject->stdWrap($value, $configuration['variables.'][$key . '.'])
 					: $value;
 			}
 
 			$less->setVariables($variables);
 		}
 
-		if (count((array) $configuration['importDirectories'])) {
+		if (count((array) $configuration['importDirectories.'])) {
 
 			$importDirectories = array();
-			foreach ($configuration['importDirectories'] as $key => $value) {
+			foreach ($configuration['importDirectories.'] as $key => $value) {
 
-				$importDirectories[] = isset($configuration['importDirectories'][$key . '.'])
-					? $parentObject->stdWrap($configuration['importDirectories'][$key], $configuration['importDirectories'][$key . '.'])
+				$importDirectories[] = isset($configuration['importDirectories.'][$key . '.'])
+					? $parentObject->stdWrap($value, $configuration['importDirectories.'][$key . '.'])
 					: $value;
 			}
 

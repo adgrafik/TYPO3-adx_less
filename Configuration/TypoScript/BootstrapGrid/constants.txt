@@ -1,0 +1,37 @@
+
+/**
+ * plugin.tx_adxless
+ */
+plugin.tx_adxless {
+
+	cssPageTypeNum = 1352192765
+
+	cssClassPrefix = adxless-
+
+	grid {
+
+		columns = 12
+		fluid = 0
+
+		largeDisplays {
+			columnWidth = 70px
+			gutter = 30px
+		}
+
+		default {
+			columnWidth = 60px
+			gutter = 20px
+		}
+
+		portraitTablets {
+			columnWidth = 42px
+			gutter = 20px
+		}
+
+		phonesToTablets {
+		}
+
+		phones {
+		}
+	}
+}

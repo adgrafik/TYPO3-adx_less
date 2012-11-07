@@ -1,0 +1,69 @@
+
+/**
+ * Page: includes
+ */
+page.includeCSS {
+	tx_adxless_bootstrap_grid = ?type={$plugin.tx_adxless.cssPageTypeNum}
+	tx_adxless_bootstrap_grid.external = 1
+}
+
+
+/**
+ * Page: Backend layout CSS
+ */
+pageTxAdxLessCSS = PAGE
+pageTxAdxLessCSS {
+
+	typeNum = {$plugin.tx_adxless.cssPageTypeNum}
+
+	config {
+		admPanel = 0
+		disableAllHeaderCode = 1
+		disableCharsetHeader = 1
+		disablePrefixComment = 1
+		additionalHeaders = Content-type: text/css
+	}
+
+	10 = LESS
+	10 {
+
+		// cObject
+		compile = FILE
+		compile.file = EXT:adx_less/Resources/Private/CSS/BootstrapGrid.less.css
+
+		variables {
+
+			prefix = {$plugin.tx_adxless.cssClassPrefix}
+
+			// Grid
+			gridColumns = {$plugin.tx_adxless.grid.columns}
+
+			// Default 940px grid
+			gridColumnWidth = {$plugin.tx_adxless.grid.default.columnWidth}
+			gridGutterWidth = {$plugin.tx_adxless.grid.default.gutter}
+			gridRowWidth = (@gridColumns * @gridColumnWidth) + (@gridGutterWidth * (@gridColumns - 1))
+
+			// 1200px min
+			gridColumnWidth1200 = {$plugin.tx_adxless.grid.largeDisplays.columnWidth}
+			gridGutterWidth1200 = {$plugin.tx_adxless.grid.largeDisplays.gutter}
+			gridRowWidth1200 = (@gridColumns * @gridColumnWidth1200) + (@gridGutterWidth1200 * (@gridColumns - 1))
+
+			// 768px-979px
+			gridColumnWidth768 = {$plugin.tx_adxless.grid.portraitTablets.columnWidth}
+			gridGutterWidth768 = {$plugin.tx_adxless.grid.portraitTablets.gutter}
+			gridRowWidth768 = (@gridColumns * @gridColumnWidth768) + (@gridGutterWidth768 * (@gridColumns - 1))
+
+			// Fluid grid
+			fluidGridColumnWidth = percentage(@gridColumnWidth / @gridRowWidth)
+			fluidGridGutterWidth = percentage(@gridGutterWidth / @gridRowWidth)
+
+			// 1200px min
+			fluidGridColumnWidth1200 = percentage(@gridColumnWidth1200 / @gridRowWidth1200)
+			fluidGridGutterWidth1200 = percentage(@gridGutterWidth1200 / @gridRowWidth1200)
+
+			// 768px-979px
+			fluidGridColumnWidth768 = percentage(@gridColumnWidth768 / @gridRowWidth768)
+			fluidGridGutterWidth768 = percentage(@gridGutterWidth768 / @gridRowWidth768)
+		}
+	}
+}
