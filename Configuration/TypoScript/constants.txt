@@ -1,0 +1,14 @@
+
+/**
+ * plugin.tx_adxadaptiveimages
+ */
+plugin.tx_adxadaptiveimages {
+
+	cssClassPrefix = adxadaptiveimages-
+
+	maxWidth {
+		large = 1200
+		default = {$styles.content.imgtext.maxW}
+		medium = 150
+	}
+}

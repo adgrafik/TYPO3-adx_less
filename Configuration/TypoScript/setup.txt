@@ -1,0 +1,45 @@
+
+/**
+ * plugin.tx_adxadaptiveimages
+ */
+plugin.tx_adxadaptiveimages {
+
+	selectorClassName = {$plugin.tx_adxadaptiveimages.cssClassPrefix}adaptive-images
+
+	breakpoints {
+
+		noScript {
+			file.maxW = {$plugin.tx_adxadaptiveimages.maxWidth.default}
+		}
+
+		0 {
+			file.maxW = {$plugin.tx_adxadaptiveimages.maxWidth.large}
+		}
+
+		1 {
+			file.maxW = {$plugin.tx_adxadaptiveimages.maxWidth.default}
+		}
+
+		2 {
+			file.maxW = {$plugin.tx_adxadaptiveimages.maxWidth.medium}
+		}
+	}
+
+}
+
+
+// make tt_content.image adaptive
+tt_content.image {
+	20.1.adaptive.field = tx_adxadaptiveimages_adaptive
+}
+
+// include JavaScript
+page.includeJS {
+	tx_adxless_adaptive_images = EXT:adx_less/Resources/Public/JavaScript/AdxLessAdaptiveImages.js
+}
+
+// extend adx_less
+pageTxAdxLessCSS {
+	10.compile.20 = FILE
+	10.compile.20.file = EXT:adx_adaptive_images/Resources/Private/CSS/Common.css
+}
