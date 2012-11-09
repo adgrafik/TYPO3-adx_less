@@ -12,7 +12,7 @@
 
 $EM_CONF[$_EXTKEY] = array(
 	'title' => 'ad: LESS',
-	'description' => 'LESS-PHP-compiler or Javascript-based less.js-compiler',
+	'description' => 'LESS-PHP-compiler or Javascript-based less.js-compiler. Adaptive images.',
 	'category' => 'plugin',
 	'shy' => 0,
 	'version' => '0.0.0',

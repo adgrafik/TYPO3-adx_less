@@ -13,7 +13,8 @@ plugin.tx_adxless {
 		columns = 12
 		fluid = 0
 
-		largeDisplays {
+		large {
+			breakpointMin = 1200px
 			columnWidth = 70px
 			gutter = 30px
 		}
@@ -23,15 +24,11 @@ plugin.tx_adxless {
 			gutter = 20px
 		}
 
-		portraitTablets {
+		medium {
+			breakpointMin = 768px
+			breakpointMax = 979px
 			columnWidth = 42px
 			gutter = 20px
-		}
-
-		phonesToTablets {
-		}
-
-		phones {
 		}
 	}
 }
