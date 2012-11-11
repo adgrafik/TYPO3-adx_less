@@ -20,8 +20,6 @@
  * The TYPO3 project - inspiring people to share!                         *
  *                                                                        */
 
-include_once('../LESSPHP/lessc.inc.php');
-
 /**
  * @package Fluid
  * @subpackage ViewHelpers
@@ -49,25 +47,25 @@ class Tx_AdxLess_ViewHelpers_CompileViewHelper extends Tx_Fluid_Core_ViewHelper_
 			}
 		}
 
-		$less = new lessc;
+		$configuration = array();
 
 		if ($formatter !== NULL) {
-			$less->setFormatter($formatter);
+			$configuration['formatter'] = $formatter;
 		}
 
 		if ($preserveComments !== NULL) {
-			$less->setPreserveComments((boolean) $preserveComments);
+			$configuration['preserveComments'] = $preserveComments;
 		}
 
 		if (count($variables)) {
-			$less->setVariables($variables);
+			$configuration['variables'] = $variables;
 		}
 
 		if (count($importDirectories)) {
-			$less->setImportDir($importDirectories);
+			$configuration['importDirectories'] = $importDirectories;
 		}
 
-		$content = $less->compile($data);
+		$content = Tx_AdxLess_Utility_LessCompiler::compile($data, $configuration, $contentObject);
 
 		return $content;
 	}

@@ -3,6 +3,54 @@
  * plugin.tx_adxless
  */
 plugin.tx_adxless {
+
+	// string (lessjs, compressed, classic)
+	formatter = lessjs
+	// integer
+#	preserveComments = 0
+
+	variables {
+
+		classPrefix = {$plugin.tx_adxless.cssClassPrefix}
+
+		gridColumns = {$plugin.tx_adxless.grid.columns}
+
+		// default (940px grid)
+		gridDefaultColumnWidth = {$plugin.tx_adxless.grid.default.columnWidth}
+		gridDefaultGutterWidth = {$plugin.tx_adxless.grid.default.gutter}
+		gridDefaultRowWidth = (@gridColumns * @gridDefaultColumnWidth) + (@gridDefaultGutterWidth * (@gridColumns - 1))
+
+		// large (1200px min)
+		gridLargeColumnWidth = {$plugin.tx_adxless.grid.large.columnWidth}
+		gridLargeGutterWidth = {$plugin.tx_adxless.grid.large.gutter}
+		gridLargeBreakpointMin = {$plugin.tx_adxless.grid.large.breakpointMin}
+		gridLargeRowWidth = (@gridColumns * @gridLargeColumnWidth) + (@gridLargeGutterWidth * (@gridColumns - 1))
+
+		// medium (768px-979px)
+		gridMediumColumnWidth = {$plugin.tx_adxless.grid.medium.columnWidth}
+		gridMediumGutterWidth = {$plugin.tx_adxless.grid.medium.gutter}
+		gridMediumBreakpointMin = {$plugin.tx_adxless.grid.medium.breakpointMin}
+		gridMediumBreakpointMax = {$plugin.tx_adxless.grid.medium.breakpointMax}
+		gridMediumRowWidth = (@gridColumns * @gridMediumColumnWidth) + (@gridMediumGutterWidth * (@gridColumns - 1))
+
+		// fluid default
+		fluidGridDefaultColumnWidth = percentage(@gridDefaultColumnWidth / @gridDefaultRowWidth)
+		fluidGridDefaultGutterWidth = percentage(@gridDefaultGutterWidth / @gridDefaultRowWidth)
+
+		// fluid large (1200px min)
+		fluidGridLargeColumnWidth = percentage(@gridLargeColumnWidth / @gridLargeRowWidth)
+		fluidGridLargeGutterWidth = percentage(@gridLargeGutterWidth / @gridLargeRowWidth)
+
+		// fluid medium (768px-979px)
+		fluidGridMediumColumnWidth = percentage(@gridMediumColumnWidth / @gridMediumRowWidth)
+		fluidGridMediumGutterWidth = percentage(@gridMediumGutterWidth / @gridMediumRowWidth)
+	}
+
+#	// array
+#	importDirectories {
+#		// string/stdWrap
+#		1 =
+#	}
 }
 
 
@@ -10,73 +58,5 @@ plugin.tx_adxless {
  * Page: includes
  */
 page.includeCSS {
-	tx_adxless_bootstrap_grid = ?type={$plugin.tx_adxless.cssPageTypeNum}
-	tx_adxless_bootstrap_grid.external = 1
-}
-
-
-/**
- * Page: Backend layout CSS
- */
-pageTxAdxLessCSS = PAGE
-pageTxAdxLessCSS {
-
-	typeNum = {$plugin.tx_adxless.cssPageTypeNum}
-
-	config {
-		admPanel = 0
-		disableAllHeaderCode = 1
-		disableCharsetHeader = 1
-		disablePrefixComment = 1
-		additionalHeaders = Content-type: text/css
-	}
-
-	10 = LESS
-	10 {
-
-		// cObject
-		compile = COA
-		compile {
-
-			10 = FILE
-			10.file = EXT:adx_less/Resources/Private/CSS/BootstrapGrid.less.css
-		}
-
-		variables {
-
-			classPrefix = {$plugin.tx_adxless.cssClassPrefix}
-
-			gridColumns = {$plugin.tx_adxless.grid.columns}
-
-			// default (940px grid)
-			gridDefaultColumnWidth = {$plugin.tx_adxless.grid.default.columnWidth}
-			gridDefaultGutterWidth = {$plugin.tx_adxless.grid.default.gutter}
-			gridDefaultRowWidth = (@gridColumns * @gridDefaultColumnWidth) + (@gridDefaultGutterWidth * (@gridColumns - 1))
-
-			// large (1200px min)
-			gridLargeColumnWidth = {$plugin.tx_adxless.grid.large.columnWidth}
-			gridLargeGutterWidth = {$plugin.tx_adxless.grid.large.gutter}
-			gridLargeBreakpointMin = {$plugin.tx_adxless.grid.large.breakpointMin}
-			gridLargeRowWidth = (@gridColumns * @gridLargeColumnWidth) + (@gridLargeGutterWidth * (@gridColumns - 1))
-
-			// medium (768px-979px)
-			gridMediumColumnWidth = {$plugin.tx_adxless.grid.medium.columnWidth}
-			gridMediumGutterWidth = {$plugin.tx_adxless.grid.medium.gutter}
-			gridMediumBreakpointMin = {$plugin.tx_adxless.grid.medium.breakpointMin}
-			gridMediumBreakpointMax = {$plugin.tx_adxless.grid.medium.breakpointMax}
-			gridMediumRowWidth = (@gridColumns * @gridMediumColumnWidth) + (@gridMediumGutterWidth * (@gridColumns - 1))
-
-			// fluid default
-			fluidGridDefaultColumnWidth = percentage(@gridDefaultColumnWidth / @gridDefaultRowWidth)
-			fluidGridDefaultGutterWidth = percentage(@gridDefaultGutterWidth / @gridDefaultRowWidth)
-
-			// fluid large (1200px min)
-			fluidGridLargeColumnWidth = percentage(@gridLargeColumnWidth / @gridLargeRowWidth)
-			fluidGridLargeGutterWidth = percentage(@gridLargeGutterWidth / @gridLargeRowWidth)
-
-			// fluid medium (768px-979px)
-			fluidGridMediumColumnWidth = percentage(@gridMediumColumnWidth / @gridMediumRowWidth)
-			fluidGridMediumGutterWidth = percentage(@gridMediumGutterWidth / @gridMediumRowWidth)
-		}
-	}
+	tx_adxless_bootstrap_grid = EXT:adx_less/Resources/Private/CSS/BootstrapGrid.adxless.css
 }
