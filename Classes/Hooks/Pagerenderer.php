@@ -32,7 +32,7 @@ class Tx_AdxLess_Hooks_Pagerenderer {
 			$content = Tx_AdxLess_Utility_LessCompiler::compile($source, $settings);
 
 			// write file
-			$compiledFilePathAndName = TSpagegen::inline2TempFile($fileName, 'css');
+			$compiledFilePathAndName = TSpagegen::inline2TempFile($content, 'css');
 			$fileConfiguration['file'] = $compiledFilePathAndName;
 		}
 	}
