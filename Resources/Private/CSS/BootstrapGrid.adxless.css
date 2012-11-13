@@ -57,7 +57,7 @@ img {
 (~".@{classPrefix}hidden-desktop") { display: none !important; }
 (~".@{classPrefix}visible-desktop") { display: inherit !important; }
 
-// Tablets & small desktops only
+// Tablets & small desktops only (768px - 979px)
 @media (min-width: @gridMediumBreakpointMin) and (max-width: @gridMediumBreakpointMax) {
 	// Hide everything else
 	(~".@{classPrefix}hidden-desktop") { display: inherit !important; }
@@ -68,7 +68,7 @@ img {
 	(~".@{classPrefix}hidden-tablet") { display: none !important; }
 }
 
-// Phones only
+// Phones only (767px)
 @media (max-width: @gridMediumBreakpointMin - 1) {
 	// Hide everything else
 	(~".@{classPrefix}hidden-desktop") { display: inherit !important; }
@@ -79,11 +79,18 @@ img {
 	(~".@{classPrefix}hidden-phone") { display: none !important; }
 }
 
-// Centered container element
-(~".@{classPrefix}container-fixed") {
-  margin-right: auto;
-  margin-left: auto;
-  #tx-adxbackendlayout > .clearfix();
+// Container (centered, fixed-width layouts)
+(~".@{classPrefix}container") {
+	margin-right: auto;
+	margin-left: auto;
+	#tx-adxbackendlayout > .clearfix();
+}
+
+// Fluid layouts (left aligned, with sidebar, min- & max-width content)
+(~".@{classPrefix}container-fluid") {
+	padding-right: @gridDefaultGutterWidth;
+	padding-left: @gridDefaultGutterWidth;
+	#tx-adxbackendlayout > .clearfix();
 }
 
 #tx-adxbackendlayout {
@@ -205,6 +212,7 @@ img {
 // Fluid (940px)
 #tx-adxbackendlayout > .fluid(@fluidGridDefaultColumnWidth, @fluidGridDefaultGutterWidth);
 
+// Large Desktops only (1200px)
 @media (min-width: @gridLargeBreakpointMin) {
 
 	// Fixed grid
@@ -214,6 +222,7 @@ img {
 	#tx-adxbackendlayout > .fluid(@fluidGridLargeColumnWidth, @fluidGridLargeGutterWidth);
 }
 
+// Tablets & small desktops only (768px - 979px)
 @media (min-width: @gridMediumBreakpointMin) and (max-width: @gridMediumBreakpointMax) {
 
 	// Fixed grid
@@ -223,6 +232,7 @@ img {
 	#tx-adxbackendlayout > .fluid(@fluidGridMediumColumnWidth, @fluidGridMediumGutterWidth);
 }
 
+// Phones only (767px)
 @media (max-width: @gridMediumBreakpointMin - 1) {
 
 	// GRID & CONTAINERS
@@ -230,6 +240,11 @@ img {
 	// Remove width from containers
 	(~".@{classPrefix}container") {
 		width: auto;
+	}
+
+	// Remove padding on container given explicit padding set on body
+	(~".@{classPrefix}container-fluid") {
+		padding: 0;
 	}
 
 	// Fluid rows
