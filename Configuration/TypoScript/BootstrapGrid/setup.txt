@@ -54,9 +54,22 @@ plugin.tx_adxless {
 }
 
 
-/**
- * Page: includes
- */
-page.includeCSS {
-	tx_adxless_bootstrap_grid = EXT:adx_less/Resources/Private/CSS/BootstrapGrid.adxless.css
+// Page: includes
+page {
+
+	includeCSS {
+		tx_adxless_bootstrap_grid = EXT:adx_less/Resources/Private/CSS/BootstrapGrid.adxless.css
+	}
+
+	headerData.1352997637 = TEXT
+	headerData.1352997637 {
+
+		value = {$plugin.tx_adxless.grid.viewport}
+		required = 1
+
+		wrap = <meta name="viewport" content=" | ">
+
+		prepend = TEXT
+		prepend.char = 10
+	}
 }
