@@ -1,0 +1,37 @@
+
+/**
+ * plugin.tx_adxless
+ */
+plugin.tx_adxless {
+
+	fileSuffixes = {$plugin.tx_adxless.fileSuffixes}
+
+	// string (lessjs, compressed, classic)
+	formatter = {$plugin.tx_adxless.formatter}
+	// integer
+	preserveComments = {$plugin.tx_adxless.preserveComments}
+
+	variables {
+	}
+
+	// comma seperated string
+	importDirectories = 
+}
+
+
+/**
+ * Include less css file using PAGE and LESS cObject.
+ */
+pageTxAdxLessCSS = PAGE
+pageTxAdxLessCSS {
+
+	typeNum = {$plugin.tx_adxless.cssPageTypeNum}
+
+	config {
+		admPanel = 0
+		disableAllHeaderCode = 1
+		disableCharsetHeader = 1
+		disablePrefixComment = 1
+		additionalHeaders = Content-type: text/css
+	}
+}

@@ -1,0 +1,16 @@
+
+/**
+ * plugin.tx_adxless
+ */
+plugin.tx_adxless {
+
+	cssPageTypeNum = 1352192765
+
+	// comma seperated list of allowed suffixes
+	fileSuffixes = .less
+
+	// string (lessjs, compressed, classic)
+	formatter = lessjs
+	// integer
+	preserveComments = 0
+}

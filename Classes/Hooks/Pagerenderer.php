@@ -11,20 +11,21 @@ class Tx_AdxLess_Hooks_Pagerenderer {
 	 */
 	public function preProcess($configuration, t3lib_PageRenderer $parentObject) {
 
+		$settings = Tx_AdxLess_Utility_LessCompiler::getTypoScriptByContentObject($GLOBALS['TSFE']->cObj);
+		$fileSuffixes = Tx_Extbase_Utility_Arrays::trimExplode(',', $settings['fileSuffixes']);
+
 		foreach ($configuration['cssFiles'] as $fileName => &$fileConfiguration) {
 
-			if (strpos($fileName, '.adxless.css') === FALSE) {
+			$found = FALSE;
+			foreach ($fileSuffixes as $fileSuffix) {
+				if (strpos($fileName, $fileSuffix) !== FALSE) {
+					$found = TRUE;
+					break;
+				}
+			}
+			if (!$found) {
 				continue;
 			}
-
-			// get plugin settings
-			$objectManager = t3lib_div::makeInstance('Tx_Extbase_Object_ObjectManager');
-			$configurationManager = $objectManager->get('Tx_Extbase_Configuration_ConfigurationManager');
-			$configurationManager->setContentObject($GLOBALS['TSFE']->cObj);
-			$settings = $configurationManager->getConfiguration(
-				Tx_Extbase_Configuration_ConfigurationManager::CONFIGURATION_TYPE_FULL_TYPOSCRIPT
-			);
-			$settings = $settings['plugin.']['tx_adxless.'];
 
 			// get source
 			$sourceFilePathAndName = t3lib_div::getFileAbsFileName($fileName);
@@ -32,8 +33,7 @@ class Tx_AdxLess_Hooks_Pagerenderer {
 			$content = Tx_AdxLess_Utility_LessCompiler::compile($source, $settings);
 
 			// write file
-			$compiledFilePathAndName = TSpagegen::inline2TempFile($content, 'css');
-			$fileConfiguration['file'] = $compiledFilePathAndName;
+			$fileConfiguration['file'] = TSpagegen::inline2TempFile($content, 'css');
 		}
 	}
 

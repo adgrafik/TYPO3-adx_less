@@ -6,14 +6,13 @@ plugin.tx_adxless {
 
 	cssPageTypeNum = 1352192765
 
-	cssClassPrefix = adxless-
+	bootstrapGrid {
 
-	grid {
+		cssClassPrefix = adxless-
 
 		viewport = width=device-width, initial-scale=1.0
 
 		columns = 12
-		fluid = 0
 
 		large {
 			breakpointMin = 1200px

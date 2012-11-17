@@ -4,33 +4,28 @@
  */
 plugin.tx_adxless {
 
-	// string (lessjs, compressed, classic)
-	formatter = lessjs
-	// integer
-#	preserveComments = 0
-
 	variables {
 
-		classPrefix = {$plugin.tx_adxless.cssClassPrefix}
+		classPrefix = {$plugin.tx_adxless.bootstrapGrid.cssClassPrefix}
 
-		gridColumns = {$plugin.tx_adxless.grid.columns}
+		gridColumns = {$plugin.tx_adxless.bootstrapGrid.columns}
 
 		// default (940px grid)
-		gridDefaultColumnWidth = {$plugin.tx_adxless.grid.default.columnWidth}
-		gridDefaultGutterWidth = {$plugin.tx_adxless.grid.default.gutter}
+		gridDefaultColumnWidth = {$plugin.tx_adxless.bootstrapGrid.default.columnWidth}
+		gridDefaultGutterWidth = {$plugin.tx_adxless.bootstrapGrid.default.gutter}
 		gridDefaultRowWidth = (@gridColumns * @gridDefaultColumnWidth) + (@gridDefaultGutterWidth * (@gridColumns - 1))
 
 		// large (1200px min)
-		gridLargeColumnWidth = {$plugin.tx_adxless.grid.large.columnWidth}
-		gridLargeGutterWidth = {$plugin.tx_adxless.grid.large.gutter}
-		gridLargeBreakpointMin = {$plugin.tx_adxless.grid.large.breakpointMin}
+		gridLargeColumnWidth = {$plugin.tx_adxless.bootstrapGrid.large.columnWidth}
+		gridLargeGutterWidth = {$plugin.tx_adxless.bootstrapGrid.large.gutter}
+		gridLargeBreakpointMin = {$plugin.tx_adxless.bootstrapGrid.large.breakpointMin}
 		gridLargeRowWidth = (@gridColumns * @gridLargeColumnWidth) + (@gridLargeGutterWidth * (@gridColumns - 1))
 
 		// medium (768px-979px)
-		gridMediumColumnWidth = {$plugin.tx_adxless.grid.medium.columnWidth}
-		gridMediumGutterWidth = {$plugin.tx_adxless.grid.medium.gutter}
-		gridMediumBreakpointMin = {$plugin.tx_adxless.grid.medium.breakpointMin}
-		gridMediumBreakpointMax = {$plugin.tx_adxless.grid.medium.breakpointMax}
+		gridMediumColumnWidth = {$plugin.tx_adxless.bootstrapGrid.medium.columnWidth}
+		gridMediumGutterWidth = {$plugin.tx_adxless.bootstrapGrid.medium.gutter}
+		gridMediumBreakpointMin = {$plugin.tx_adxless.bootstrapGrid.medium.breakpointMin}
+		gridMediumBreakpointMax = {$plugin.tx_adxless.bootstrapGrid.medium.breakpointMax}
 		gridMediumRowWidth = (@gridColumns * @gridMediumColumnWidth) + (@gridMediumGutterWidth * (@gridColumns - 1))
 
 		// fluid default
@@ -45,12 +40,6 @@ plugin.tx_adxless {
 		fluidGridMediumColumnWidth = percentage(@gridMediumColumnWidth / @gridMediumRowWidth)
 		fluidGridMediumGutterWidth = percentage(@gridMediumGutterWidth / @gridMediumRowWidth)
 	}
-
-#	// array
-#	importDirectories {
-#		// string/stdWrap
-#		1 =
-#	}
 }
 
 
@@ -58,13 +47,13 @@ plugin.tx_adxless {
 page {
 
 	includeCSS {
-		tx_adxless_bootstrap_grid = EXT:adx_less/Resources/Private/CSS/BootstrapGrid.adxless.css
+		tx_adxless_bootstrap_grid = EXT:adx_less/Resources/Private/CSS/BootstrapGrid.less
 	}
 
 	headerData.1352997637 = TEXT
 	headerData.1352997637 {
 
-		value = {$plugin.tx_adxless.grid.viewport}
+		value = {$plugin.tx_adxless.bootstrapGrid.viewport}
 		required = 1
 
 		wrap = <meta name="viewport" content=" | ">

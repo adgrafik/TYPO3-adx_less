@@ -6,7 +6,7 @@ if (is_file($file)) {
 
 	$content = Tx_AdxLess_Utility_LessCompiler::compile(file_get_contents($file));
 
-	header('Content-type: text/css');echo '*';
+	header('Content-type: text/css');
 	echo $content;
 }
 
