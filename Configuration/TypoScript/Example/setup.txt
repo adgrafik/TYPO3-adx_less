@@ -15,7 +15,7 @@ plugin.tx_adxless {
 }
 
 page.includeCSS {
-	tx_adxless_example_1 = EXT:adx_less/Resources/Private/CSS/Example/Styles.less
+	tx_adxless_example_1 = EXT:adx_less/Resources/Private/LESS/Example/Styles.less
 }
 
 
@@ -29,7 +29,7 @@ pageTxAdxLessCSS {
 	10 {
 
 		compile = FILE
-		compile.file = EXT:adx_less/Resources/Private/CSS/Example/Styles.less
+		compile.file = EXT:adx_less/Resources/Private/LESS/Example/Styles.less
 
 		variables {
 			nice-blue = #5B83AD

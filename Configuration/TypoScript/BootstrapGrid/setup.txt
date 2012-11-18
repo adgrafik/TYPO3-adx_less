@@ -50,7 +50,7 @@ plugin.tx_adxless {
 page {
 
 	includeCSS {
-		tx_adxless_bootstrap_grid_common = EXT:adx_less/Resources/Private/CSS/BootstrapGrid/Common.less
+		tx_adxless_bootstrap_grid_common = EXT:adx_less/Resources/Private/LESS/BootstrapGrid/Common.less
 	}
 
 	headerData.1352997637 = TEXT

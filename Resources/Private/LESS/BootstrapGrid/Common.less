@@ -1,0 +1,279 @@
+
+// Img border in a's and image quality
+img {
+  /* Responsive images (ensure images don't scale beyond their parents) */
+  max-width: 100%; /* Part 1: Set a maxium relative to the parent */
+  width: auto\9; /* IE7-8 need help adjusting responsive images */
+  height: auto; /* Part 2: Scale the height according to the width, otherwise you get stretching */
+
+  vertical-align: middle;
+  border: 0;
+  -ms-interpolation-mode: bicubic;
+}
+
+// Prevent max-width from affecting Google Maps
+#map_canvas img,
+.google-maps img {
+  max-width: none;
+}
+
+// Clearfix
+(~".@{classPrefix}clearfix") {
+	*zoom: 1;
+	&:before,
+	&:after {
+		display: table;
+		content: "";
+		// Fixes Opera/contenteditable bug:
+		// http://nicolasgallagher.com/micro-clearfix-hack/#comment-36952
+		line-height: 0;
+	}
+	&:after {
+		clear: both;
+	}
+}
+
+// Box sizing
+.box-sizing(@boxmodel) {
+	-webkit-box-sizing: @boxmodel;
+	-moz-box-sizing: @boxmodel;
+	box-sizing: @boxmodel;
+}
+
+// Block level inputs
+.input-block-level {
+	display: block;
+	width: 100%;
+	.box-sizing(border-box); // Makes inputs behave like true block-level elements
+}
+
+// Visibility utilities
+
+// For desktops
+(~".@{classPrefix}visible-phone") { display: none !important; }
+(~".@{classPrefix}visible-tablet") { display: none !important; }
+(~".@{classPrefix}hidden-phone") { }
+(~".@{classPrefix}hidden-tablet") { }
+(~".@{classPrefix}hidden-desktop") { display: none !important; }
+(~".@{classPrefix}visible-desktop") { display: inherit !important; }
+
+// Tablets & small desktops only (768px - 979px)
+@media (min-width: @gridMediumBreakpointMin) and (max-width: @gridMediumBreakpointMax) {
+	// Hide everything else
+	(~".@{classPrefix}hidden-desktop") { display: inherit !important; }
+	(~".@{classPrefix}visible-desktop") { display: none !important ; }
+	// Show
+	(~".@{classPrefix}visible-tablet") { display: inherit !important; }
+	// Hide
+	(~".@{classPrefix}hidden-tablet") { display: none !important; }
+}
+
+// Phones only (767px)
+@media (max-width: @gridMediumBreakpointMin - 1) {
+	// Hide everything else
+	(~".@{classPrefix}hidden-desktop") { display: inherit !important; }
+	(~".@{classPrefix}visible-desktop") { display: none !important; }
+	// Show
+	(~".@{classPrefix}visible-phone") { display: inherit !important; } // Use inherit to restore previous behavior
+	// Hide
+	(~".@{classPrefix}hidden-phone") { display: none !important; }
+}
+
+// Container (centered, fixed-width layouts)
+(~".@{classPrefix}container") {
+	margin-right: auto;
+	margin-left: auto;
+	#tx-adxbackendlayout > .clearfix();
+}
+
+// Fluid layouts (left aligned, with sidebar, min- & max-width content)
+(~".@{classPrefix}container-fluid") {
+	padding-right: @gridDefaultGutterWidth;
+	padding-left: @gridDefaultGutterWidth;
+	#tx-adxbackendlayout > .clearfix();
+}
+
+#tx-adxbackendlayout {
+
+	// Clearfix
+	.clearfix() {
+		*zoom: 1;
+		&:before,
+		&:after {
+			display: table;
+			content: "";
+			// Fixes Opera/contenteditable bug:
+			// http://nicolasgallagher.com/micro-clearfix-hack/#comment-36952
+			line-height: 0;
+		}
+		&:after {
+			clear: both;
+		}
+	}
+
+	.grid (@gridColumnWidth, @gridGutterWidth) {
+
+		// pass parameters for lessphp every time
+		.spanX (@index, @gridColumnWidth, @gridGutterWidth) when (@index > 0) {
+			(~".@{classPrefix}span@{index}") { .span(@index, @gridColumnWidth, @gridGutterWidth); }
+			.spanX(@index - 1, @gridColumnWidth, @gridGutterWidth);
+		}
+		.spanX (0, @gridColumnWidth, @gridGutterWidth) {}
+
+		.span (@columns, @gridColumnWidth, @gridGutterWidth) {
+			width: (@gridColumnWidth * @columns) + (@gridGutterWidth * (@columns - 1));
+		}
+
+		.offsetX (@index, @gridColumnWidth, @gridGutterWidth) when (@index > 0) {
+			(~".@{classPrefix}offset@{index}") { .offset(@index, @gridColumnWidth, @gridGutterWidth); }
+			.offsetX(@index - 1, @gridColumnWidth, @gridGutterWidth);
+		}
+		.offsetX (0, @gridColumnWidth, @gridGutterWidth) {}
+
+		.offset (@columns, @gridColumnWidth, @gridGutterWidth) {
+			margin-left: (@gridColumnWidth * @columns) + (@gridGutterWidth * (@columns + 1));
+		}
+
+		(~".@{classPrefix}row") {
+			margin-left: @gridGutterWidth * -1;
+			#tx-adxbackendlayout > .clearfix();
+		}
+
+		(~'[class*="@{classPrefix}span"]') {
+			float: left;
+			min-height: 1px; // prevent collapsing columns
+			margin-left: @gridGutterWidth;
+		}
+
+		// Set the container width, and override it for fixed navbars in media queries
+		(~".@{classPrefix}container") {
+			.span(@gridColumns, @gridColumnWidth, @gridGutterWidth);
+		}
+
+		// generate .spanX and .offsetX
+		.spanX (@gridColumns, @gridColumnWidth, @gridGutterWidth);
+		.offsetX (@gridColumns, @gridColumnWidth, @gridGutterWidth);
+	}
+
+	.fluid (@fluidGridColumnWidth, @fluidGridGutterWidth) {
+
+		// pass parameters for lessphp every time
+		.spanX (@index, @fluidGridColumnWidth, @fluidGridGutterWidth) when (@index > 0) {
+			(~".@{classPrefix}span@{index}") { .span(@index, @fluidGridColumnWidth, @fluidGridGutterWidth); }
+			.spanX(@index - 1, @fluidGridColumnWidth, @fluidGridGutterWidth);
+		}
+		.spanX (0, @fluidGridColumnWidth, @fluidGridGutterWidth) {}
+
+		.span (@columns, @fluidGridColumnWidth, @fluidGridGutterWidth) {
+			width: (@fluidGridColumnWidth * @columns) + (@fluidGridGutterWidth * (@columns - 1));
+			*width: (@fluidGridColumnWidth * @columns) + (@fluidGridGutterWidth * (@columns - 1)) - (.5 / @gridDefaultRowWidth * 100 * 1%);
+		}
+
+		.offsetX (@index, @fluidGridColumnWidth, @fluidGridGutterWidth) when (@index > 0) {
+			(~'.@{classPrefix}offset@{index}') { .offset(@index, @fluidGridColumnWidth, @fluidGridGutterWidth); }
+			(~'.@{classPrefix}offset@{index}:first-child') { .offsetFirstChild(@index, @fluidGridColumnWidth, @fluidGridGutterWidth); }
+			.offsetX(@index - 1, @fluidGridColumnWidth, @fluidGridGutterWidth);
+		}
+		.offsetX (0, @fluidGridColumnWidth, @fluidGridGutterWidth) {}
+
+		.offset (@columns, @fluidGridColumnWidth, @fluidGridGutterWidth) {
+			margin-left: (@fluidGridColumnWidth * @columns) + (@fluidGridGutterWidth * (@columns - 1)) + (@fluidGridGutterWidth*2);
+			*margin-left: (@fluidGridColumnWidth * @columns) + (@fluidGridGutterWidth * (@columns - 1)) - (.5 / @gridDefaultRowWidth * 100 * 1%) + (@fluidGridGutterWidth*2) - (.5 / @gridDefaultRowWidth * 100 * 1%);
+		}
+
+		.offsetFirstChild (@columns, @fluidGridColumnWidth, @fluidGridGutterWidth) {
+			margin-left: (@fluidGridColumnWidth * @columns) + (@fluidGridGutterWidth * (@columns - 1)) + (@fluidGridGutterWidth);
+			*margin-left: (@fluidGridColumnWidth * @columns) + (@fluidGridGutterWidth * (@columns - 1)) - (.5 / @gridDefaultRowWidth * 100 * 1%) + @fluidGridGutterWidth - (.5 / @gridDefaultRowWidth * 100 * 1%);
+		}
+
+		(~'.@{classPrefix}row-fluid') {
+			width: 100%;
+			#tx-adxbackendlayout > .clearfix();
+			(~'[class*="@{classPrefix}span"]') {
+				.input-block-level();
+				float: left;
+				margin-left: @fluidGridGutterWidth;
+				*margin-left: @fluidGridGutterWidth - (.5 / @gridDefaultRowWidth * 100 * 1%);
+			}
+			(~'[class*="@{classPrefix}span"]:first-child') {
+				margin-left: 0;
+			}
+	
+			// generate .spanX and .offsetX
+			.spanX (@gridColumns, @fluidGridColumnWidth, @fluidGridGutterWidth);
+			.offsetX (@gridColumns, @fluidGridColumnWidth, @fluidGridGutterWidth);
+		}
+	}
+}
+
+// Fixed (940px)
+#tx-adxbackendlayout > .grid(@gridDefaultColumnWidth, @gridDefaultGutterWidth);
+
+// Fluid (940px)
+#tx-adxbackendlayout > .fluid(@fluidGridDefaultColumnWidth, @fluidGridDefaultGutterWidth);
+
+// Large Desktops only (1200px)
+@media (min-width: @gridLargeBreakpointMin) {
+
+	// Fixed grid
+	#tx-adxbackendlayout > .grid(@gridLargeColumnWidth, @gridLargeGutterWidth);
+
+	// Fluid grid
+	#tx-adxbackendlayout > .fluid(@fluidGridLargeColumnWidth, @fluidGridLargeGutterWidth);
+}
+
+// Tablets & small desktops only (768px - 979px)
+@media (min-width: @gridMediumBreakpointMin) and (max-width: @gridMediumBreakpointMax) {
+
+	// Fixed grid
+	#tx-adxbackendlayout > .grid(@gridMediumColumnWidth, @gridMediumGutterWidth);
+
+	// Fluid grid
+	#tx-adxbackendlayout > .fluid(@fluidGridMediumColumnWidth, @fluidGridMediumGutterWidth);
+}
+
+// Phones only (767px)
+@media (max-width: @gridMediumBreakpointMin - 1) {
+
+	// GRID & CONTAINERS
+	// -----------------
+	// Remove width from containers
+	(~".@{classPrefix}container") {
+		width: auto;
+	}
+
+	// Remove padding on container given explicit padding set on body
+	(~".@{classPrefix}container-fluid") {
+		padding: 0;
+	}
+
+	// Fluid rows
+	(~".@{classPrefix}row-fluid") {
+		width: 100%;
+	}
+
+	// Undo negative margin on rows and thumbnails
+	(~".@{classPrefix}row") {
+		margin-left: 0;
+	}
+
+	// Make all grid-sized elements block level again
+	(~'[class*="@{classPrefix}span"]'),
+	(~'.@{classPrefix}row-fluid [class*="@{classPrefix}span"]') {
+		float: none;
+		display: block;
+		width: 100%;
+		margin-left: 0;
+		.box-sizing(border-box);
+	}
+
+	(~".@{classPrefix}span@{gridColumns}"),
+	(~".@{classPrefix}row-fluid .@{classPrefix}span@{gridColumns}") {
+		width: 100%;
+		.box-sizing(border-box);
+	}
+
+	(~'.@{classPrefix}row-fluid [class*="@{classPrefix}offset"]:first-child') {
+		margin-left: 0;
+	}
+}
