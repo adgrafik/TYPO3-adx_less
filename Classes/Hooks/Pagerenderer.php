@@ -30,7 +30,7 @@ class Tx_AdxLess_Hooks_Pagerenderer {
 			// get source
 			$sourceFilePathAndName = t3lib_div::getFileAbsFileName($fileName);
 			$source = t3lib_div::getUrl($sourceFilePathAndName);
-			$content = Tx_AdxLess_Utility_LessCompiler::compile($source, $settings);
+			$content = Tx_AdxLess_Utility_LessCompiler::compile($source, $settings['lessphp.']);
 
 			// write file
 			$fileConfiguration['file'] = TSpagegen::inline2TempFile($content, 'css');

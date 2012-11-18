@@ -4,16 +4,18 @@
  */
 plugin.tx_adxless {
 
-	// array
-	variables {
-		// string/stdWrap
-		nice-blue = #5B83AD
-		light-blue = @nice-blue + #111
+	lessphp {
+		// array
+		variables {
+			// string/stdWrap
+			nice-blue = #5B83AD
+			light-blue = @nice-blue + #111
+		}
 	}
 }
 
 page.includeCSS {
-	tx_adxless_example_1 = EXT:adx_less/Resources/Private/CSS/Example.less
+	tx_adxless_example_1 = EXT:adx_less/Resources/Private/CSS/Example/Styles.less
 }
 
 
@@ -27,7 +29,7 @@ pageTxAdxLessCSS {
 	10 {
 
 		compile = FILE
-		compile.file = EXT:adx_less/Resources/Private/CSS/Example.less
+		compile.file = EXT:adx_less/Resources/Private/CSS/Example/Styles.less
 
 		variables {
 			nice-blue = #5B83AD
@@ -37,6 +39,6 @@ pageTxAdxLessCSS {
 }
 
 page.includeCSS {
-	tx_adxless_example_2 = ?type={$plugin.tx_adxless.cssPageTypeNum}
+	tx_adxless_example_2 = ?type={$plugin.tx_adxless.lessPageTypeNum}
 	tx_adxless_example_2.external = 1
 }

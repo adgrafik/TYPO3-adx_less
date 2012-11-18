@@ -34,7 +34,7 @@ class ux_tx_tinymce_rte_base extends tx_tinymce_rte_base {
 			// get source
 			$sourceFilePathAndName = t3lib_div::getFileAbsFileName($fileName);
 			$source = t3lib_div::getUrl($sourceFilePathAndName);
-			$content = Tx_AdxLess_Utility_LessCompiler::compile($source, $settings);
+			$content = Tx_AdxLess_Utility_LessCompiler::compile($source, $settings['lessphp.']);
 
 			// write file
 			$cssFiles[] = TSpagegen::inline2TempFile($content, 'css');

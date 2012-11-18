@@ -4,13 +4,20 @@
  */
 plugin.tx_adxless {
 
-	cssPageTypeNum = 1352192765
-
+	# cat=adx_less/enable/101; type=boolean; label=LLL:EXT:adx_less/Resources/Private/Language/locallang_conf.xlf:plugin.tx_adxless.includeLessJs
+	includeLessJs = 0
 	// comma seperated list of allowed suffixes
+	# cat=adx_less/enable/102; type=string; label=LLL:EXT:adx_less/Resources/Private/Language/locallang_conf.xlf:plugin.tx_adxless.fileSuffixes
 	fileSuffixes = .less
+	# cat=adx_less/enable/103; type=int+; label=LLL:EXT:adx_less/Resources/Private/Language/locallang_conf.xlf:plugin.tx_adxless.lessPageTypeNum
+	lessPageTypeNum = 1352192765
 
-	// string (lessjs, compressed, classic)
-	formatter = lessjs
-	// integer
-	preserveComments = 0
+	# customsubcategory=tx_adxless_lessphp=LLL:EXT:adx_less/Resources/Private/Language/locallang_conf.xlf:plugin.tx_adxless.lessphp
+
+	lessphp {
+		# cat=adx_less/tx_adxless_lessphp/201; type=options[lessjs,compressed,classic]; label=LLL:EXT:adx_less/Resources/Private/Language/locallang_conf.xlf:plugin.tx_adxless.lessphp.formatter
+		formatter = lessjs
+		# cat=adx_less/tx_adxless_lessphp/202; type=boolean; label=LLL:EXT:adx_less/Resources/Private/Language/locallang_conf.xlf:plugin.tx_adxless.lessphp.preserveComments
+		preserveComments = 0
+	}
 }

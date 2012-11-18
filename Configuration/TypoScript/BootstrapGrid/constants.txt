@@ -4,31 +4,47 @@
  */
 plugin.tx_adxless {
 
-	cssPageTypeNum = 1352192765
+	# customsubcategory=tx_adxless_bootstrap_grid=LLL:EXT:adx_less/Resources/Private/Language/locallang_conf.xlf:plugin.tx_adxless.bootstrapGrid
 
 	bootstrapGrid {
 
-		cssClassPrefix = adxless-
-
+		# cat=adx_less/tx_adxless_bootstrap_grid/501; type=string; label=LLL:EXT:adx_less/Resources/Private/Language/locallang_conf.xlf:plugin.tx_adxless.bootstrapGrid.cssClassPrefix
+		cssClassPrefix = adxless-bootstrap-
+		# cat=adx_less/tx_adxless_bootstrap_grid/502; type=string; label=LLL:EXT:adx_less/Resources/Private/Language/locallang_conf.xlf:plugin.tx_adxless.bootstrapGrid.viewport
 		viewport = width=device-width, initial-scale=1.0
-
+		# cat=adx_less/tx_adxless_bootstrap_grid/503; type=int+; label=LLL:EXT:adx_less/Resources/Private/Language/locallang_conf.xlf:plugin.tx_adxless.bootstrapGrid.columns
 		columns = 12
 
+		# customsubcategory=tx_adxless_bootstrap_grid_large=LLL:EXT:adx_less/Resources/Private/Language/locallang_conf.xlf:plugin.tx_adxless.bootstrapGrid.large
+
 		large {
+			# cat=adx_less/tx_adxless_bootstrap_grid_large/601; type=string; label=LLL:EXT:adx_less/Resources/Private/Language/locallang_conf.xlf:plugin.tx_adxless.bootstrapGrid.large.breakpointMin
 			breakpointMin = 1200px
+			# cat=adx_less/tx_adxless_bootstrap_grid_large/602; type=string; label=LLL:EXT:adx_less/Resources/Private/Language/locallang_conf.xlf:plugin.tx_adxless.bootstrapGrid.large.columnWidth
 			columnWidth = 70px
+			# cat=adx_less/tx_adxless_bootstrap_grid_large/603; type=string; label=LLL:EXT:adx_less/Resources/Private/Language/locallang_conf.xlf:plugin.tx_adxless.bootstrapGrid.large.gutter
 			gutter = 30px
 		}
 
+		# customsubcategory=tx_adxless_bootstrap_grid_default=LLL:EXT:adx_less/Resources/Private/Language/locallang_conf.xlf:plugin.tx_adxless.bootstrapGrid.default
+
 		default {
+			# cat=adx_less/tx_adxless_bootstrap_grid_default/701; type=string; label=LLL:EXT:adx_less/Resources/Private/Language/locallang_conf.xlf:plugin.tx_adxless.bootstrapGrid.default.columnWidth
 			columnWidth = 60px
+			# cat=adx_less/tx_adxless_bootstrap_grid_default/702; type=string; label=LLL:EXT:adx_less/Resources/Private/Language/locallang_conf.xlf:plugin.tx_adxless.bootstrapGrid.default.gutter
 			gutter = 20px
 		}
 
+		# customsubcategory=tx_adxless_bootstrap_grid_medium=LLL:EXT:adx_less/Resources/Private/Language/locallang_conf.xlf:plugin.tx_adxless.bootstrapGrid.medium
+
 		medium {
+			# cat=adx_less/tx_adxless_bootstrap_grid_medium/801; type=string; label=LLL:EXT:adx_less/Resources/Private/Language/locallang_conf.xlf:plugin.tx_adxless.bootstrapGrid.medium.breakpointMin
 			breakpointMin = 768px
+			# cat=adx_less/tx_adxless_bootstrap_grid_medium/802; type=string; label=LLL:EXT:adx_less/Resources/Private/Language/locallang_conf.xlf:plugin.tx_adxless.bootstrapGrid.medium.breakpointMax
 			breakpointMax = 979px
+			# cat=adx_less/tx_adxless_bootstrap_grid_medium/803; type=string; label=LLL:EXT:adx_less/Resources/Private/Language/locallang_conf.xlf:plugin.tx_adxless.bootstrapGrid.medium.columnWidth
 			columnWidth = 42px
+			# cat=adx_less/tx_adxless_bootstrap_grid_medium/804; type=string; label=LLL:EXT:adx_less/Resources/Private/Language/locallang_conf.xlf:plugin.tx_adxless.bootstrapGrid.medium.gutter
 			gutter = 20px
 		}
 	}

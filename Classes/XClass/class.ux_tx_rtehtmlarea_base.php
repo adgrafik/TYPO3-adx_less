@@ -29,7 +29,7 @@ class ux_tx_rtehtmlarea_base extends tx_rtehtmlarea_base {
 			// get source
 			$sourceFilePathAndName = t3lib_div::getFileAbsFileName($fileName);
 			$source = t3lib_div::getUrl($sourceFilePathAndName);
-			$content = Tx_AdxLess_Utility_LessCompiler::compile($source, $settings);
+			$content = Tx_AdxLess_Utility_LessCompiler::compile($source, $settings['lessphp.']);
 
 			// write file
 			$this->thisConfig['contentCSS'] = TSpagegen::inline2TempFile($content, 'css');

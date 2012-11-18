@@ -34,7 +34,7 @@ class Tx_AdxLess_ViewHelpers_CompileViewHelper extends Tx_Fluid_Core_ViewHelper_
 	 * @param string $formatter
 	 * @param boolean $preserveComments
 	 * @param array $variables
-	 * @param array $importDirectories
+	 * @param string $importDirectories
 	 * @return string
 	 * @api
 	 */

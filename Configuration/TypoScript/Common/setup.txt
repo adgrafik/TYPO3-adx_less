@@ -6,26 +6,37 @@ plugin.tx_adxless {
 
 	fileSuffixes = {$plugin.tx_adxless.fileSuffixes}
 
-	// string (lessjs, compressed, classic)
-	formatter = {$plugin.tx_adxless.formatter}
-	// integer
-	preserveComments = {$plugin.tx_adxless.preserveComments}
+	lessphp {
+		// string (lessjs, compressed, classic)
+		formatter = {$plugin.tx_adxless.lessphp.formatter}
+		// integer
+		preserveComments = {$plugin.tx_adxless.lessphp.preserveComments}
 
-	variables {
+		variables {
+		}
+
+		// comma seperated string
+		importDirectories = 
 	}
-
-	// comma seperated string
-	importDirectories = 
 }
+
+[globalVar = LIT:1 = {$plugin.tx_adxless.includeLessJs}]
+
+page.includeJS {
+	tx_adxless_lessjs = EXT:adx_less/Resources/Public/JavaScript/less-1.3.1.min.js
+	tx_adxless_lessjs.disableCompression = 1
+}
+
+[end]
 
 
 /**
  * Include less css file using PAGE and LESS cObject.
  */
-pageTxAdxLessCSS = PAGE
-pageTxAdxLessCSS {
+pageTxAdxLess = PAGE
+pageTxAdxLess {
 
-	typeNum = {$plugin.tx_adxless.cssPageTypeNum}
+	typeNum = {$plugin.tx_adxless.lessPageTypeNum}
 
 	config {
 		admPanel = 0
