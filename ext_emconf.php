@@ -12,7 +12,7 @@
 
 $EM_CONF[$_EXTKEY] = array(
 	'title' => 'ad: LESS',
-	'description' => 'Contains a server- and client-side LESS compiler (http://leafo.net/lessphp/, http://lesscss.org). Supports a new cObject "LESS", a hook for t3lib_pagerenderer witch compiles LESS files for "includeCSS", hooks for rtehtmlarea for the property "RTE.default.contentCSS" and tinymce_rte for the property "RTE.default.init.content_css" and a ViewHelper for Fluid. Furthermore includes the Twitter Bootstrap grid system. Only the grid system and nothing more ;)',
+	'description' => 'Contains a server- and client-side LESS compiler (http://leafo.net/lessphp/, http://lesscss.org). Supports a new cObject "LESS", a hook for t3lib_pagerenderer witch compiles LESS files for "includeCSS", hooks for rtehtmlarea for the property "RTE.default.contentCSS" and tinymce_rte for the property "RTE.default.init.content_css" and a ViewHelper for Fluid.',
 	'category' => 'plugin',
 	'shy' => 0,
 	'version' => '0.0.0',

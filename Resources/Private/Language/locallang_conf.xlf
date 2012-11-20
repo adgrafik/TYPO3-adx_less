@@ -22,58 +22,6 @@
 			<trans-unit id="plugin.tx_adxless.lessphp.preserveComments" xml:space="preserve">
 				<source>Preserving Comments: By default, all comments in the source LESS file are stripped when compiling. You might want to keep the /* */ comments in the output though.</source>
 			</trans-unit>
-
-			<trans-unit id="plugin.tx_adxless.bootstrapGrid" xml:space="preserve">
-				<source>Bootstrap Grid</source>
-			</trans-unit>
-			<trans-unit id="plugin.tx_adxless.bootstrapGrid.cssClassPrefix" xml:space="preserve">
-				<source>CSS class prefix: Prefix of all CSS classes.</source>
-			</trans-unit>
-			<trans-unit id="plugin.tx_adxless.bootstrapGrid.viewport" xml:space="preserve">
-				<source>Viewport: The META-viewport.</source>
-			</trans-unit>
-			<trans-unit id="plugin.tx_adxless.bootstrapGrid.columns" xml:space="preserve">
-				<source>Columns: Number of columns of the grid.</source>
-			</trans-unit>
-
-			<trans-unit id="plugin.tx_adxless.bootstrapGrid.large" xml:space="preserve">
-				<source>Bootstrap Grid (large displays)</source>
-			</trans-unit>
-			<trans-unit id="plugin.tx_adxless.bootstrapGrid.large.breakpointMin" xml:space="preserve">
-				<source>Min. breakpoint: Minimum breakpoint of large displays.</source>
-			</trans-unit>
-			<trans-unit id="plugin.tx_adxless.bootstrapGrid.large.columnWidth" xml:space="preserve">
-				<source>Column width: Column width of large displays.</source>
-			</trans-unit>
-			<trans-unit id="plugin.tx_adxless.bootstrapGrid.large.gutter" xml:space="preserve">
-				<source>Gutter: Gutter of large displays.</source>
-			</trans-unit>
-
-			<trans-unit id="plugin.tx_adxless.bootstrapGrid.default" xml:space="preserve">
-				<source>Bootstrap Grid (default displays)</source>
-			</trans-unit>
-			<trans-unit id="plugin.tx_adxless.bootstrapGrid.default.columnWidth" xml:space="preserve">
-				<source>Column width: Column width of default displays.</source>
-			</trans-unit>
-			<trans-unit id="plugin.tx_adxless.bootstrapGrid.default.gutter" xml:space="preserve">
-				<source>Gutter: Gutter of default displays.</source>
-			</trans-unit>
-
-			<trans-unit id="plugin.tx_adxless.bootstrapGrid.medium" xml:space="preserve">
-				<source>Bootstrap Grid (medium displays)</source>
-			</trans-unit>
-			<trans-unit id="plugin.tx_adxless.bootstrapGrid.medium.breakpointMin" xml:space="preserve">
-				<source>Min. breakpoint: Minimum breakpoint of medium displays.</source>
-			</trans-unit>
-			<trans-unit id="plugin.tx_adxless.bootstrapGrid.medium.breakpointMax" xml:space="preserve">
-				<source>Max. breakpoint: Maximum breakpoint of medium displays.</source>
-			</trans-unit>
-			<trans-unit id="plugin.tx_adxless.bootstrapGrid.medium.columnWidth" xml:space="preserve">
-				<source>Column width: Column width of medium displays.</source>
-			</trans-unit>
-			<trans-unit id="plugin.tx_adxless.bootstrapGrid.medium.gutter" xml:space="preserve">
-				<source>Gutter: Gutter of medium displays.</source>
-			</trans-unit>
 		</body>
 	</file>
 </xliff>
