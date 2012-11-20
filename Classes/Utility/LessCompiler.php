@@ -38,11 +38,10 @@ class Tx_AdxLess_Utility_LessCompiler {
 
 			if (isset($configuration['importDirectories']) && $configuration['importDirectories']) {
 
-				$importDirectories = array();
-				$directories = Tx_Extbase_Utility_Arrays::trimExplode(',', $configuration['importDirectories']);
+				$importDirectories = Tx_Extbase_Utility_Arrays::trimExplode(',', $configuration['importDirectories']);
 
-				foreach ($directories as $directory) {
-					$importDirectories[] = t3lib_div::getFileAbsFileName($directory);
+				foreach ($importDirectories as &$importDirectory) {
+					$importDirectory = t3lib_div::getFileAbsFileName($importDirectory);
 				}
 
 				$less->setImportDir($importDirectories);
