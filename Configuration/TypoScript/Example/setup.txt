@@ -1,0 +1,44 @@
+
+/**
+ * Include less css file using global settings.
+ */
+plugin.tx_adxless {
+
+	lessphp {
+		// array
+		variables {
+			// string/stdWrap
+			nice-blue = #5B83AD
+			light-blue = @nice-blue + #111
+		}
+	}
+}
+
+page.includeCSS {
+	tx_adxless_example_1 = EXT:adx_less/Resources/Private/LESS/Example/Styles.less
+}
+
+
+/**
+ * Include less css file using PAGE and LESS cObject.
+ */
+pageTxAdxLessCSS = PAGE
+pageTxAdxLessCSS {
+
+	10 = LESS
+	10 {
+
+		compile = FILE
+		compile.file = EXT:adx_less/Resources/Private/LESS/Example/Styles.less
+
+		variables {
+			nice-blue = #5B83AD
+			light-blue = @nice-blue + #111
+		}
+	}
+}
+
+page.includeCSS {
+	tx_adxless_example_2 = ?type={$plugin.tx_adxless.lessPageTypeNum}
+	tx_adxless_example_2.external = 1
+}
