@@ -28,9 +28,11 @@ class Tx_AdxLess_Utility_LessCompiler {
 				$variables = array();
 				foreach ($configuration['variables.'] as $key => $value) {
 
-					$variables[$key] = isset($configuration['variables.'][$key . '.'])
-						? $contentObject->stdWrap($value, $configuration['variables.'][$key . '.'])
-						: $value;
+					if (strpos($key, '.') === FALSE) {
+						$variables[$key] = $value;
+					} else {
+						$variables[substr($key, 0, -1)] = $contentObject->stdWrap($value, $configuration['variables.'][$key]);
+					}
 				}
 
 				$less->setVariables($variables);
