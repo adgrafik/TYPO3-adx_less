@@ -11,6 +11,11 @@ class Tx_AdxLess_Hooks_Pagerenderer {
 	 */
 	public function preProcess($configuration, t3lib_PageRenderer $parentObject) {
 
+		// nothing to do in backend
+		if (TYPO3_MODE == 'BE') {
+			return;
+		}
+
 		$settings = Tx_AdxLess_Utility_LessCompiler::getTypoScriptByContentObject($GLOBALS['TSFE']->cObj);
 		$fileSuffixes = Tx_Extbase_Utility_Arrays::trimExplode(',', $settings['fileSuffixes']);
 

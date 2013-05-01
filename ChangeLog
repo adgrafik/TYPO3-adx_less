@@ -1,5 +1,6 @@
 1.0.1
 	[BUGFIX] No stdWrap from variables without equal sign "=".
+	[BUGFIX] Fixed PHP warning of Pagerenderer.php in backend.
 
 1.0.0
 	Initial upload.
