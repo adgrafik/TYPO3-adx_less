@@ -12,32 +12,20 @@ class ux_tx_tinymce_rte_base extends tx_tinymce_rte_base {
 			return parent::parseConfig($configuration);
 		}
 
-		$settings = Tx_AdxLess_Utility_LessCompiler::getTypoScriptByPageUid($this->currentPage);
-		$fileSuffixes = Tx_Extbase_Utility_Arrays::trimExplode(',', $settings['fileSuffixes']);
 		$cssFiles = array();
-
+		$less = t3lib_div::makeInstance('Tx_AdxLess_Less');
 		$files = Tx_Extbase_Utility_Arrays::trimExplode(',', $configuration['content_css']);
+		foreach ($files as $filename) {
 
-		foreach ($files as $fileName) {
-
-			$found = FALSE;
-			foreach ($fileSuffixes as $fileSuffix) {
-				if (strpos($fileName, $fileSuffix) !== FALSE) {
-					$found = TRUE;
-					break;
-				}
-			}
-			if (!$found) {
+			// If not a less file, nothing else to do.
+			if (!strrpos($filename, '.less')) {
 				continue;
 			}
 
-			// get source
-			$sourceFilePathAndName = t3lib_div::getFileAbsFileName($fileName);
-			$source = t3lib_div::getUrl($sourceFilePathAndName);
-			$content = Tx_AdxLess_Utility_LessCompiler::compile($source, $settings['lessphp.']);
-
-			// write file
-			$cssFiles[] = TSpagegen::inline2TempFile($content, 'css');
+			$cssFiles[] = $less->compileLessAndWriteTempFile(
+				t3lib_div::getFileAbsFileName($filename),
+				$this->currentPage
+			);
 		}
 
 		if (count($cssFiles)) {

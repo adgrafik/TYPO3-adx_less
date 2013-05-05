@@ -1,3 +1,15 @@
+
+1.0.2
+	[TASK] Added cache support for parsed LESS files.
+	[TASK] Updated lessphp to v0.3.9.
+	[TASK] Updated lesscss to v1.3.3.
+	[TASK] Removed unnecessary cObject LESS.
+	[TASK] Removed unnecessary eID support.
+	[TASK] Removed unnecessary lessPageTypeNum support.
+	[TASK] Removed obsolete plugin.tx_adxless.lessphp.fileSuffixes option.
+	[TASK] Cleaned up directories.
+	[FEATURE] Integration of lesscss works now like t3jquery.
+
 1.0.1
 	[BUGFIX] No stdWrap from variables without equal sign "=".
 	[BUGFIX] Fixed PHP warning of Pagerenderer.php in backend.

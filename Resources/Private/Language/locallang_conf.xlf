@@ -3,16 +3,6 @@
 	<file source-language="en" datatype="plaintext" original="messages" date="2012-06-13T20:22:32Z" product-name="adx_less">
 		<header/>
 		<body>
-			<trans-unit id="plugin.tx_adxless.includeLessJs" xml:space="preserve">
-				<source>Include less.js: Includes the client-side LESS compiler (http://lesscss.org/).</source>
-			</trans-unit>
-			<trans-unit id="plugin.tx_adxless.fileSuffixes" xml:space="preserve">
-				<source>File suffixes: Comma seperated list of supported file suffixes for all compiled LESS files.</source>
-			</trans-unit>
-			<trans-unit id="plugin.tx_adxless.lessPageTypeNum" xml:space="preserve">
-				<source>Page type number: The page.typeNum for including LESS files via page.</source>
-			</trans-unit>
-
 			<trans-unit id="plugin.tx_adxless.lessphp" xml:space="preserve">
 				<source>LESS PHP compiler</source>
 			</trans-unit>

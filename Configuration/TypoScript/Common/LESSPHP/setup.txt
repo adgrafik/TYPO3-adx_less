@@ -1,0 +1,17 @@
+
+plugin.tx_adxless {
+
+	lessphp {
+
+		// string (lessjs, compressed, classic)
+		formatter = {$plugin.tx_adxless.lessphp.formatter}
+		// integer
+		preserveComments = {$plugin.tx_adxless.lessphp.preserveComments}
+
+		variables {
+		}
+
+		// comma seperated string
+		importDirectories = 
+	}
+}

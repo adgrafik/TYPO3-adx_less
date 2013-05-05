@@ -36,7 +36,6 @@
   width: @z + 1cm; // 14cm
   height: @b + @x + 0px; // 24px
   color: @c;
-  background: @light-blue;
   font-family: @fonts;
 }
 
@@ -118,16 +117,13 @@ h1:before {
   content: "@{symbol}: ";
 }
 
-@path: "files/";
-body {
-  background: url(@{path}my_background.png);
-}
-
 @opacity: 0.5;
 .ie-transparent {
   filter: e(%("alpha(opacity=%d)", @opacity));
 }
 
-div {
-  color: @nice-blue;
+body {
+  background-color: @border-color;
+  font-family: @fonts;
+  color: saturate(@base, 5%);
 }

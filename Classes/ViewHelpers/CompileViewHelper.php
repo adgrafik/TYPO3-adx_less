@@ -65,7 +65,8 @@ class Tx_AdxLess_ViewHelpers_CompileViewHelper extends Tx_Fluid_Core_ViewHelper_
 			$configuration['importDirectories'] = $importDirectories;
 		}
 
-		$content = Tx_AdxLess_Utility_LessCompiler::compile($data, $configuration, $contentObject);
+		$less = t3lib_div::makeInstance('Tx_AdxLess_Less');
+		$content = $less->compileLess($data, $this->contentObject);
 
 		return $content;
 	}
