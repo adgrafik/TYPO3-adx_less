@@ -92,7 +92,7 @@ class Tx_AdxLess_Less implements t3lib_Singleton {
 	/**
 	 * @param string $content
 	 * @param mixed $reference Page ID or content object tslib_cObj
-	 * @return string
+	 * @return mixed
 	 */
 	public function compileLessAndWriteTempFile($content, $reference) {
 
