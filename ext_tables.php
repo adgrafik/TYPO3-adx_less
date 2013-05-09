@@ -1,10 +1,10 @@
 <?php
 if (!defined ('TYPO3_MODE')) die ('Access denied.');
 
-$extensionConfiguration = unserialize($GLOBALS['TYPO3_CONF_VARS']['EXT']['extConf']['adx_less']);
+$less = t3lib_div::makeInstance('Tx_AdxLess_Less');
 
 // Include ext_tables.php of themes.
-if ($extensionConfiguration['compiler'] == 'lesscss') {
+if ($less->isClientSide()) {
 	t3lib_extMgm::addStaticFile($_EXTKEY, 'Configuration/TypoScript/Example/LESSCSS/', 'ad: LESSCSS example');
 } else {
 	t3lib_extMgm::addStaticFile($_EXTKEY, 'Configuration/TypoScript/Common/LESSPHP/', 'ad: LESSPHP common');

@@ -184,42 +184,54 @@ class Tx_AdxLess_Less implements t3lib_Singleton {
 	 * @return string
 	 */
 	public function getClientCompilerVersion() {
-		return $this->extensionConfiguration['clientCompilerVersion'];
+		return isset($this->extensionConfiguration['clientCompilerVersion'])
+			? $this->extensionConfiguration['clientCompilerVersion']
+			: '0.3.9';
 	}
 
 	/**
 	 * @return string
 	 */
 	public function getDontIntegrateInRootline() {
-		return $this->extensionConfiguration['dontIntegrateInRootline'];
+		return isset($this->extensionConfiguration['dontIntegrateInRootline'])
+			? $this->extensionConfiguration['dontIntegrateInRootline']
+			: '';
 	}
 
 	/**
 	 * @return string
 	 */
 	public function getDontIntegrateOnUID() {
-		return $this->extensionConfiguration['dontIntegrateOnUID'];
+		return isset($this->extensionConfiguration['dontIntegrateOnUID'])
+			? $this->extensionConfiguration['dontIntegrateOnUID']
+			: '';
 	}
 
 	/**
 	 * @return boolean
 	 */
 	public function isAlwaysIntegrate() {
-		return (boolean) $this->extensionConfiguration['alwaysIntegrate'];
+		return isset($this->extensionConfiguration['alwaysIntegrate'])
+			? (boolean) $this->extensionConfiguration['alwaysIntegrate']
+			: FALSE;
 	}
 
 	/**
 	 * @return boolean
 	 */
 	public function isClientSide() {
-		return ($this->extensionConfiguration['compiler'] == 'lesscss');
+		return isset($this->extensionConfiguration['compiler'])
+			? ($this->extensionConfiguration['compiler'] == 'lesscss')
+			: FALSE;
 	}
 
 	/**
 	 * @return boolean
 	 */
 	public function isServerSide() {
-		return ($this->extensionConfiguration['compiler'] == 'lessphp');
+		return isset($this->extensionConfiguration['compiler'])
+			? ($this->extensionConfiguration['compiler'] == 'lessphp')
+			: TRUE;
 	}
 
 	/**
@@ -228,7 +240,7 @@ class Tx_AdxLess_Less implements t3lib_Singleton {
 	 * @return array
 	 */
 	protected function getExtensionConfiguration() {
-		return unserialize($GLOBALS['TYPO3_CONF_VARS']['EXT']['extConf']['adx_less']);
+		return (array) @unserialize($GLOBALS['TYPO3_CONF_VARS']['EXT']['extConf']['adx_less']);
 	}
 
 	/**

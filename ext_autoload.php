@@ -6,7 +6,7 @@ $extensionConfiguration = unserialize($GLOBALS['TYPO3_CONF_VARS']['EXT']['extCon
 
 return array(
 	'tx_adxless_less' => $extensionClassesPath . 'Less.php',
-	'lessc' => $extensionClassesPath . 'LESSPHP/' . $extensionConfiguration['serverCompilerVersion'] . '/lessc.inc.php',
+	'lessc' => $extensionClassesPath . 'LESSPHP/' . (isset($extensionConfiguration['serverCompilerVersion']) ? $extensionConfiguration['serverCompilerVersion'] : '0.3.9') . '/lessc.inc.php',
 );
 
 ?>
