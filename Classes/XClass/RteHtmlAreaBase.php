@@ -1,5 +1,5 @@
 <?php
-namespace AdGrafik\AdxLess\ViewHelpers;
+namespace AdGrafik\AdxLess\XClass;
 
 /***************************************************************
  *  Copyright notice
@@ -26,48 +26,26 @@ namespace AdGrafik\AdxLess\ViewHelpers;
  ***************************************************************/
 
 
-class CompileViewHelper extends \TYPO3\CMS\Fluid\Core\ViewHelper\AbstractViewHelper {
+class RteHtmlAreaBase extends \TYPO3\CMS\Rtehtmlarea\RteHtmlAreaBase {
 
 	/**
-	 * @param string $data
-	 * @param string $formatter
-	 * @param boolean $preserveComments
-	 * @param array $variables
-	 * @param string $importDirectories
 	 * @return string
-	 * @api
 	 */
-	public function render($data = NULL, $formatter = NULL, $preserveComments = NULL, $variables = NULL, $importDirectories = NULL) {
+	public function getContentCssFileName() {
 
-		if ($data === NULL) {
-			$data = $this->renderChildren();
-			if ($data === NULL) {
-				return '';
-			}
-		}
-
-		$configuration = array();
-
-		if ($formatter !== NULL) {
-			$configuration['formatter'] = $formatter;
-		}
-
-		if ($preserveComments !== NULL) {
-			$configuration['preserveComments'] = $preserveComments;
-		}
-
-		if (count($variables)) {
-			$configuration['variables'] = $variables;
-		}
-
-		if (count($importDirectories)) {
-			$configuration['importDirectories'] = $importDirectories;
+		if (!isset($this->thisConfig['contentCSS']) || !$this->thisConfig['contentCSS'] || !strrpos($this->thisConfig['contentCSS'], '.less')) {
+			return parent::getContentCssFileName();
 		}
 
 		$less = \TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance('AdGrafik\\AdxLess\\Less');
-		$content = $less->compileLess($data, $this->contentObject);
+		$this->thisConfig['contentCSS'] = $less->compileLessAndWriteTempFile(
+			\TYPO3\CMS\Core\Utility\GeneralUtility::getFileAbsFileName($this->thisConfig['contentCSS']),
+			$this->currentPage
+		);
 
-		return $content;
+		return parent::getContentCssFileName();
 	}
+
 }
+
 ?>

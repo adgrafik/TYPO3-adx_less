@@ -19,7 +19,7 @@ plugin.tx_adxless {
 page.headerData.1367742474 = COA
 page.headerData.1367742474 {
 	10 = USER
-	10.userFunc = Tx_AdxLess_Less->addLess
+	10.userFunc = EXT:adx_less/Classes/Less.php:AdGrafik\AdxLess\Less->addLess
 	10.lessFile = EXT:adx_less/Resources/Private/LESS/Example/Styles.less
 	10.lessData (
 body {

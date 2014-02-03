@@ -1,6 +1,32 @@
 <?php
+namespace AdGrafik\AdxLess;
 
-class Tx_AdxLess_Less implements t3lib_Singleton {
+/***************************************************************
+ *  Copyright notice
+ *
+ *  (c) 2013 Arno Dudek <webmaster@adgrafik.at>
+ *
+ *  All rights reserved
+ *
+ *  This script is part of the TYPO3 project. The TYPO3 project is
+ *  free software; you can redistribute it and/or modify
+ *  it under the terms of the GNU General Public License as published by
+ *  the Free Software Foundation; either version 3 of the License, or
+ *  (at your option) any later version.
+ *
+ *  The GNU General Public License can be found at
+ *  http://www.gnu.org/copyleft/gpl.html.
+ *
+ *  This script is distributed in the hope that it will be useful,
+ *  but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *  GNU General Public License for more details.
+ *
+ *  This copyright notice MUST APPEAR in all copies of the script!
+ ***************************************************************/
+
+
+class Less implements \TYPO3\CMS\Core\SingletonInterface {
 
 	/**
 	 * @var array $extensionConfiguration
@@ -49,11 +75,11 @@ class Tx_AdxLess_Less implements t3lib_Singleton {
 		// Append LESS file
 		if ($configuration['lessFile'] || $configuration['lessFile.']) {
 
-			$file = t3lib_div::getFileAbsFileName($contentObject->stdWrap($configuration['lessFile'], $configuration['lessFile.']));
+			$file = \TYPO3\CMS\Core\Utility\GeneralUtility::getFileAbsFileName($contentObject->stdWrap($configuration['lessFile'], $configuration['lessFile.']));
 
 			if ($this->isClientSide()) {
 				// Get file path
-				$file = t3lib_div::getFileAbsFileName($contentObject->stdWrap($configuration['lessFile'], $configuration['lessFile.']));
+				$file = \TYPO3\CMS\Core\Utility\GeneralUtility::getFileAbsFileName($contentObject->stdWrap($configuration['lessFile'], $configuration['lessFile.']));
 				$file = str_replace(PATH_site, '', $file);
 			} else {
 				// Get content
@@ -81,9 +107,7 @@ class Tx_AdxLess_Less implements t3lib_Singleton {
 			}
 
 			// Write temp file
-			$file = class_exists('TYPO3\CMS\Frontend\Page\PageGenerator')
-				? TYPO3\CMS\Frontend\Page\PageGenerator::inline2TempFile($content, 'css')
-				: TSpagegen::inline2TempFile($content, 'css');
+			$file = \TYPO3\CMS\Frontend\Page\PageGenerator::inline2TempFile($content, 'css');
 
 			$this->addLessFile($file, $configuration);
 		}
@@ -98,9 +122,7 @@ class Tx_AdxLess_Less implements t3lib_Singleton {
 
 		$content = $this->compileLess($content, $reference);
 		// Write temp file
-		$file = class_exists('TYPO3\CMS\Frontend\Page\PageGenerator')
-			? TYPO3\CMS\Frontend\Page\PageGenerator::inline2TempFile($content, 'css')
-			: TSpagegen::inline2TempFile($content, 'css');
+		$file = \TYPO3\CMS\Frontend\Page\PageGenerator::inline2TempFile($content, 'css');
 
 		return $file;
 	}
@@ -113,11 +135,11 @@ class Tx_AdxLess_Less implements t3lib_Singleton {
 	public function compileLess($content, $reference) {
 
 		if (@is_file($content)) {
-			$content = t3lib_div::getUrl($content);
+			$content = \TYPO3\CMS\Core\Utility\GeneralUtility::getUrl($content);
 		}
 
 		$configuration = $this->getConfiguration($reference, 'lessphp');
-		$less = new lessc;
+		$less = new \lessc;
 
 		if ($configuration['formatter']) {
 			$less->setFormatter($configuration['formatter']);
@@ -144,9 +166,9 @@ class Tx_AdxLess_Less implements t3lib_Singleton {
 
 		if ($configuration['importDirectories']) {
 
-			$importDirectories = Tx_Extbase_Utility_Arrays::trimExplode(',', $configuration['importDirectories']);
+			$importDirectories = \TYPO3\CMS\Core\Utility\GeneralUtility::trimExplode(',', $configuration['importDirectories']);
 			foreach ($importDirectories as &$importDirectory) {
-				$importDirectory = t3lib_div::getFileAbsFileName($importDirectory);
+				$importDirectory = \TYPO3\CMS\Core\Utility\GeneralUtility::getFileAbsFileName($importDirectory);
 			}
 
 			$less->setImportDir($importDirectories);
@@ -168,13 +190,13 @@ class Tx_AdxLess_Less implements t3lib_Singleton {
 
 			if ($this->getDontIntegrateInRootline() && count($GLOBALS['TSFE']->rootLine) > 0) {
 				foreach ($GLOBALS['TSFE']->rootLine as $page) {
-					if (in_array($page['uid'], array_values(t3lib_div::trimExplode(',', $this->getDontIntegrateInRootline(), TRUE)))) {
+					if (in_array($page['uid'], array_values(\TYPO3\CMS\Core\Utility\GeneralUtility::trimExplode(',', $this->getDontIntegrateInRootline(), TRUE)))) {
 						return FALSE;
 					}
 				}
 			}
 
-			return ( ! $this->getDontIntegrateOnUID() || ! in_array($GLOBALS['TSFE']->id, array_values(t3lib_div::trimExplode(',', $this->getDontIntegrateOnUID(), TRUE))));
+			return ( ! $this->getDontIntegrateOnUID() || ! in_array($GLOBALS['TSFE']->id, array_values(\TYPO3\CMS\Core\Utility\GeneralUtility::trimExplode(',', $this->getDontIntegrateOnUID(), TRUE))));
 		}
 
 		return FALSE;
@@ -251,11 +273,11 @@ class Tx_AdxLess_Less implements t3lib_Singleton {
 
 		if (is_object($reference)) {
 
-			$objectManager = t3lib_div::makeInstance('Tx_Extbase_Object_ObjectManager');
-			$configurationManager = $objectManager->get('Tx_Extbase_Configuration_ConfigurationManager');
+			$objectManager = \TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance('TYPO3\\CMS\\Extbase\\Object\\ObjectManager');
+			$configurationManager = $objectManager->get('TYPO3\\CMS\\Extbase\\Configuration\\ConfigurationManager');
 			$configurationManager->setContentObject($reference);
 			$settings = $configurationManager->getConfiguration(
-				Tx_Extbase_Configuration_ConfigurationManager::CONFIGURATION_TYPE_FULL_TYPOSCRIPT
+				\TYPO3\CMS\Extbase\Configuration\ConfigurationManager::CONFIGURATION_TYPE_FULL_TYPOSCRIPT
 			);
 
 			$settings = isset($settings['plugin.']['tx_adxless.'])
@@ -264,9 +286,9 @@ class Tx_AdxLess_Less implements t3lib_Singleton {
 
 		} else {
 
-			$pageSelect = t3lib_div::makeInstance('t3lib_pageSelect');
+			$pageSelect = \TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance('TYPO3\\CMS\\Frontend\\Page\\PageRepository');
 			$rootLine = $pageSelect->getRootLine($reference);
-			$tsParser = t3lib_div::makeInstance('t3lib_tsparser_ext');
+			$tsParser = \TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance('TYPO3\\CMS\\Core\\TypoScript\\ExtendedTemplateService');
 			$tsParser->tt_track = 0;
 			$tsParser->init();
 			$tsParser->runThroughTemplates($rootLine);
@@ -381,11 +403,11 @@ class Tx_AdxLess_Less implements t3lib_Singleton {
 	 */
 	protected function getClientCompilerUrl() {
 
-		$url = t3lib_extMgm::extPath('adx_less') . 'Resources/Public/JavaScript/LESSCSS/less-' . $this->getClientCompilerVersion() . '.min.js';
+		$url = \TYPO3\CMS\Core\Utility\ExtensionManagementUtility::extPath('adx_less') . 'Resources/Public/JavaScript/LESSCSS/less-' . $this->getClientCompilerVersion() . '.min.js';
 		$url = str_replace(PATH_site, '', $url);
 
 		if (!file_exists(PATH_site . $url)) {
-			t3lib_div::devLog('\'' . $url . '\' does not exists!', 'adx_less', 3);
+			\TYPO3\CMS\Core\Utility\GeneralUtility::devLog('\'' . $url . '\' does not exists!', 'adx_less', 3);
 			return FALSE;
 		}
 
