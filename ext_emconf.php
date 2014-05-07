@@ -3,7 +3,7 @@
 /***************************************************************
  * Extension Manager/Repository config file for ext "adx_less".
  *
- * Auto generated 03-02-2014 16:12
+ * Auto generated 07-05-2014 09:11
  *
  * Manual updates:
  * Only the data in the array - everything else is removed by next
@@ -15,7 +15,7 @@ $EM_CONF[$_EXTKEY] = array (
 	'description' => 'Contains a server- and client-side LESS compiler (http://leafo.net/lessphp/, http://lesscss.org). Supports a new cObject "LESS", a hook for t3lib_pagerenderer witch compiles LESS files for "includeCSS", hooks for rtehtmlarea for the property "RTE.default.contentCSS" and tinymce_rte for the property "RTE.default.init.content_css" and a ViewHelper for Fluid. Furthermore includes the Twitter Bootstrap grid system. Only the grid system and nothing more ;)',
 	'category' => 'plugin',
 	'shy' => 0,
-	'version' => '1.1.0',
+	'version' => '1.1.1',
 	'dependencies' => 'cms,version',
 	'conflicts' => '',
 	'priority' => '',
