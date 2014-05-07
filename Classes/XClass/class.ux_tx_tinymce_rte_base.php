@@ -19,6 +19,7 @@ class ux_tx_tinymce_rte_base extends tx_tinymce_rte_base {
 
 			// If not a less file, nothing else to do.
 			if (!strrpos($filename, '.less')) {
+				$cssFiles[] = $filename;
 				continue;
 			}
 
