@@ -1,0 +1,36 @@
+
+plugin.tx_adxless {
+
+	lessphp {
+		variables {
+			nice-blue = #5B83AD
+			light-blue = @nice-blue + #111
+		}
+
+		# Comma seperated string or array with path => directory.
+		# @see http://lessphp.gpeasy.com/
+		importDirectories = 
+	}
+	
+	render-in-another-context < .lessphp
+	render-in-another-context {
+		variables {
+			light-blue = @nice-blue + #444
+		}
+	}
+}
+
+page.headerData.1367742474 = COA
+page.headerData.1367742474 {
+
+	# Set the USER content object where you want. The function addLess will generate the CSS file and append it with the PageRenderer.
+	10 = USER
+	10.userFunc = EXT:adx_less/Classes/Less.php:AdGrafik\AdxLess\Less->addLess
+	10.less.configuration =< plugin.tx_adxless.default
+	10.less.file = EXT:adx_less/Resources/Private/LESS/Example/Styles.less
+	10.less.data (
+body {
+  border: 1px solid @nice-blue;
+}
+)
+}

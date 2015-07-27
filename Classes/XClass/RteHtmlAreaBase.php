@@ -4,7 +4,7 @@ namespace AdGrafik\AdxLess\XClass;
 /***************************************************************
  *  Copyright notice
  *
- *  (c) 2013 Arno Dudek <webmaster@adgrafik.at>
+ *  (c) 2015 Arno Dudek <webmaster@adgrafik.at>
  *
  *  All rights reserved
  *
@@ -33,17 +33,52 @@ class RteHtmlAreaBase extends \TYPO3\CMS\Rtehtmlarea\RteHtmlAreaBase {
 	 */
 	public function getContentCssFileName() {
 
-		if (!isset($this->thisConfig['contentCSS']) || !$this->thisConfig['contentCSS'] || !strrpos($this->thisConfig['contentCSS'], '.less')) {
+		if (!isset($this->thisConfig['contentCSS']) || !$this->thisConfig['contentCSS']) {
 			return parent::getContentCssFileName();
 		}
 
-		$less = \TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance('AdGrafik\\AdxLess\\Less');
-		$this->thisConfig['contentCSS'] = $less->compileLessAndWriteTempFile(
-			\TYPO3\CMS\Core\Utility\GeneralUtility::getFileAbsFileName($this->thisConfig['contentCSS']),
-			$this->currentPage
-		);
+		$this->thisConfig['contentCSS'] = $this->parseLessFile($this->thisConfig['contentCSS']);
 
 		return parent::getContentCssFileName();
+	}
+
+	/**
+	 * @return string
+	 */
+	public function getContentCssFileNames() {
+
+		if (isset($this->thisConfig['contentCSS']) && $this->thisConfig['contentCSS']) {
+			$this->thisConfig['contentCSS'] = $this->parseLessFile($this->thisConfig['contentCSS']);
+		}
+
+		$contentCssFiles = is_array($this->thisConfig['contentCSS.']) ? $this->thisConfig['contentCSS.'] : array();
+
+		foreach ($contentCssFiles as $key => &$contentCssFile) {
+			$this->thisConfig['contentCSS.'][$key] = $this->parseLessFile($contentCssFile);
+		}
+
+		return parent::getContentCssFileNames();
+	}
+
+	/**
+	 * @return string
+	 */
+	private function parseLessFile($contentCssFile) {
+
+		$result = preg_match('/^(.*\.less)(?:\?+.*(?:lessCompilerContext=([^&]*)))?.*$/', $contentCssFile, $matches);
+
+		// If not a LESS file, nothing else to do.
+		if ($result === 0) {
+			return $contentCssFile;
+		}
+
+		// Get compiler context if set.
+		$context = isset($matches[2]) ? $matches[2] : NULL;
+		$absolutePathAndFilename = \TYPO3\CMS\Core\Utility\GeneralUtility::getFileAbsFileName($matches[1]);
+		$configuration = \AdGrafik\AdxLess\Utility\LessUtility::getConfiguration($this->thePid, $context);
+
+		$less = \TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance('AdGrafik\\AdxLess\\Less');
+		return $less->compile($absolutePathAndFilename, $configuration);
 	}
 
 }

@@ -4,7 +4,7 @@ namespace AdGrafik\AdxLess\XClass;
 /***************************************************************
  *  Copyright notice
  *
- *  (c) 2013 Arno Dudek <webmaster@adgrafik.at>
+ *  (c) 2015 Arno Dudek <webmaster@adgrafik.at>
  *
  *  All rights reserved
  *
@@ -32,34 +32,38 @@ class TinyMceRteBase extends \tx_tinymce_rte_base {
 	 * @param array
 	 * @return string
 	 */
-	public function parseConfig($configuration) {
+	public function parseConfig($parameters) {
 
-		if (!isset($configuration['content_css']) || !$configuration['content_css']) {
-			return parent::parseConfig($configuration);
+		if (!isset($parameters['content_css']) || !$parameters['content_css']) {
+			return parent::parseConfig($parameters);
 		}
 
 		$cssFiles = array();
 		$less = \TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance('AdGrafik\\AdxLess\\Less');
-		$files = \TYPO3\CMS\Core\Utility\GeneralUtility::trimExplode(',', $configuration['content_css']);
-		foreach ($files as $filename) {
+		$files = \TYPO3\CMS\Core\Utility\GeneralUtility::trimExplode(',', $parameters['content_css']);
+		foreach ($files as $pathAndFilename) {
 
-			// If not a less file, nothing else to do.
-			if (!strrpos($filename, '.less')) {
-				$cssFiles[] = $filename;
+			$result = preg_match('/^(.*\.less)(?:\?+.*(?:lessCompilerContext=([^&]*)))?.*$/', $pathAndFilename, $matches);
+
+			// If not a LESS file, nothing else to do.
+			if ($result === 0) {
+				$cssFiles[] = $pathAndFilename;
 				continue;
 			}
 
-			$cssFiles[] = $less->compileLessAndWriteTempFile(
-				\TYPO3\CMS\Core\Utility\GeneralUtility::getFileAbsFileName($filename),
-				$this->currentPage
-			);
+			// Get compiler context if set.
+			$context = isset($matches[2]) ? $matches[2] : NULL;
+			$absolutePathAndFilename = \TYPO3\CMS\Core\Utility\GeneralUtility::getFileAbsFileName($matches[1]);
+			$configuration = \AdGrafik\AdxLess\Utility\LessUtility::getConfiguration($this->currentPage, $context);
+
+			$cssFiles[] = $less->compile($absolutePathAndFilename, $configuration);
 		}
 
 		if (count($cssFiles)) {
-			$configuration['content_css'] = implode(',', $cssFiles);
+			$parameters['content_css'] = implode(',', $cssFiles);
 		}
 
-		return parent::parseConfig($configuration);
+		return parent::parseConfig($parameters);
 	}
 
 }

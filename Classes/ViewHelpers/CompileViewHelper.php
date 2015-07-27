@@ -4,7 +4,7 @@ namespace AdGrafik\AdxLess\ViewHelpers;
 /***************************************************************
  *  Copyright notice
  *
- *  (c) 2013 Arno Dudek <webmaster@adgrafik.at>
+ *  (c) 2015 Arno Dudek <webmaster@adgrafik.at>
  *
  *  All rights reserved
  *
@@ -37,7 +37,7 @@ class CompileViewHelper extends \TYPO3\CMS\Fluid\Core\ViewHelper\AbstractViewHel
 	 * @return string
 	 * @api
 	 */
-	public function render($data = NULL, $formatter = NULL, $preserveComments = NULL, $variables = NULL, $importDirectories = NULL) {
+	public function render($data = NULL, $context = NULL, $variables = NULL, $importDirectories = NULL) {
 
 		if ($data === NULL) {
 			$data = $this->renderChildren();
@@ -48,24 +48,18 @@ class CompileViewHelper extends \TYPO3\CMS\Fluid\Core\ViewHelper\AbstractViewHel
 
 		$configuration = array();
 
-		if ($formatter !== NULL) {
-			$configuration['formatter'] = $formatter;
-		}
-
-		if ($preserveComments !== NULL) {
-			$configuration['preserveComments'] = $preserveComments;
-		}
+		$less = \TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance('AdGrafik\\AdxLess\\Less');
+		$configuration = \AdGrafik\AdxLess\Utility\LessUtility::getConfiguration($this->contentObject, $context);
 
 		if (count($variables)) {
-			$configuration['variables'] = $variables;
+			$configuration['variables'] = array_replace($configuration['variables'], $variables);
 		}
 
 		if (count($importDirectories)) {
-			$configuration['importDirectories'] = $importDirectories;
+			$configuration['importDirectories'] = array_replace($configuration['importDirectories'], $importDirectories);
 		}
 
-		$less = \TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance('AdGrafik\\AdxLess\\Less');
-		$content = $less->compileLess($data, $this->contentObject);
+		$content = $less->compile($data, $configuration);
 
 		return $content;
 	}

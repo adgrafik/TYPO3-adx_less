@@ -4,7 +4,7 @@ namespace AdGrafik\AdxLess\Hooks;
 /***************************************************************
  *  Copyright notice
  *
- *  (c) 2013 Arno Dudek <webmaster@adgrafik.at>
+ *  (c) 2015 Arno Dudek <webmaster@adgrafik.at>
  *
  *  All rights reserved
  *
@@ -29,45 +29,39 @@ namespace AdGrafik\AdxLess\Hooks;
 class PageRenderer {
 
 	/**
-	 * Hook function for adding client library.
+	 * Hook function for parse files with the suffix ".less".
 	 *
-	 * @param array $configuration
+	 * @param array $parameters
 	 * @param \TYPO3\CMS\Core\Page\PageRenderer $parentObject
 	 * @return void
 	 */
-	public function preProcess($configuration, \TYPO3\CMS\Core\Page\PageRenderer $parentObject) {
+	public function preProcess($parameters, \TYPO3\CMS\Core\Page\PageRenderer $parentObject) {
 
 		$less = \TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance('AdGrafik\\AdxLess\\Less');
-
-		// Include LESS library
-		if ($less->isAlwaysIntegrate()) {
-			$this->addClientCompilerLibrary();
-		}
-
 		$cssFiles = array();
-		foreach ($configuration['cssFiles'] as $pathAndFilename => $cssConfiguration) {
+
+		foreach ($parameters['cssFiles'] as $pathAndFilename => $cssConfiguration) {
+
+			$result = preg_match('/^(.*\.less)(?:\?+.*(?:lessCompilerContext=([^&]*)))?.*$/', $pathAndFilename, $matches);
 
 			// If not a LESS file, nothing else to do.
-			if (!strrpos($pathAndFilename, '.less')) {
+			if ($result === 0) {
 				$cssFiles[$pathAndFilename] = $cssConfiguration;
 				continue;
 			}
 
-			$compiledPathAndFilename = $less->compileLessAndWriteTempFile(
-				\TYPO3\CMS\Core\Utility\GeneralUtility::getFileAbsFileName($pathAndFilename),
-				$GLOBALS['TSFE']->cObj
-			);
+			// Get compiler context if set.
+			$context = isset($matches[2]) ? $matches[2] : NULL;
+			$absolutePathAndFilename = \TYPO3\CMS\Core\Utility\GeneralUtility::getFileAbsFileName($matches[1]);
+			$configuration = \AdGrafik\AdxLess\Utility\LessUtility::getConfiguration($GLOBALS['TSFE']->cObj, $context);
+
+			$compiledPathAndFilename = $less->compile($pathAndFilename, $configuration);
 
 			$cssConfiguration['file'] = $compiledPathAndFilename;
-
-			if ($less->isClientSide()) {
-				$cssConfiguration['rel'] = 'stylesheet/less';
-			}
-
 			$cssFiles[$compiledPathAndFilename] = $cssConfiguration;
 		}
 
-		$configuration['cssFiles'] = $cssFiles;
+		$parameters['cssFiles'] = $cssFiles;
 	}
 
 }

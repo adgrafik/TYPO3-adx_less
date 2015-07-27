@@ -4,7 +4,7 @@ namespace AdGrafik\AdxLess;
 /***************************************************************
  *  Copyright notice
  *
- *  (c) 2013 Arno Dudek <webmaster@adgrafik.at>
+ *  (c) 2015 Arno Dudek <webmaster@adgrafik.at>
  *
  *  All rights reserved
  *
@@ -29,34 +29,153 @@ namespace AdGrafik\AdxLess;
 class Less implements \TYPO3\CMS\Core\SingletonInterface {
 
 	/**
-	 * @var array $extensionConfiguration
+	 * @var \Less_Parser $less
 	 */
-	protected $extensionConfiguration;
+	protected $less;
+
+	/**
+	 * @var \TYPO3\CMS\Core\Cache\Frontend\VariableFrontend $cache
+	 */
+	protected $cache;
 
 	/**
 	 * @return void
 	 */
 	public function __construct() {
-		$this->extensionConfiguration = $this->getExtensionConfiguration();
+		\Less_Autoloader::register();
+		$this->less = new \Less_Parser();
+		$this->cache = \TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance('TYPO3\\CMS\\Core\\Cache\\CacheManager')->getCache('adx_less');
 	}
 
 	/**
-	 * @return void
+	 * @param string $cacheIdentifier
+	 * @return string
 	 */
-	public function addClientCompilerLibrary() {
+	public function getCachedContent($cacheIdentifier) {
+		// Check cached files first and parse again if one hash not matching.
+		$parsedFiles = $this->cache->get('parsedFiles_' . $cacheIdentifier) ?: array();
+		foreach ($parsedFiles as $parsedFile => $hash) {
+			if (sha1_file($parsedFile) !== $hash) {
+				return FALSE;
+			}
+		}
 
-		if ($this->isClientSide() && $this->integrateClientCompiler()) {
+		$cache = FALSE;
+		if (($cache = $this->cache->get('parsedData_' . $cacheIdentifier)) == FALSE) {
+			if ($cache = $this->cache->get('parsedFile_' . $cacheIdentifier)) {
+				$cacheFile = \TYPO3\CMS\Core\Utility\GeneralUtility::getFileAbsFileName($cache);
+				$cache = @is_file($cacheFile) ? $cache : FALSE;
+			}
+		}
 
-			$pageRenderer = $GLOBALS['TSFE']->getPageRenderer();
-			$pageRenderer->addJsLibrary(
-				'tx_adxless_client_compiler',
-				$this->getClientCompilerUrl(),
-				'text/javascript',
-				FALSE,
-				TRUE,
-				$this->getClientCompilerOptions(),
-				FALSE
-			);
+		return $cache;
+	}
+
+	/**
+	 * Compiles a LESS file or string.
+	 *
+	 * @param string $content		Absolute file or string.
+	 * 								If $content is a file, the parsed file will be saved in the given 'cacheDirectory' with the name format 'filename.sha1.css'.
+	 * @param array $configuration
+	 * @param mixed $saveAsFile
+	 * @return string				Returns the parsed string if $saveAsFile is FALSE, else if it's TRUE this methode returns the new relative file name.
+	 * 								If $saveAsFile is a string, the methode expected a file name and saves the parsed content there.
+	 */
+	public function compile($content, array $configuration, $saveAsFile = TRUE) {
+
+		$cacheIdentifier = sha1($content);
+		if ($cached = $this->getCachedContent($cacheIdentifier)) {
+			return $cached;
+		}
+
+		// Default cache directory is "typo3temp/".
+		$cacheDirectory = trim(($configuration['cacheDirectory'] ?: 'typo3temp'), '/') . '/';
+		$configuration['cacheDirectory'] = \TYPO3\CMS\Core\Utility\GeneralUtility::getFileAbsFileName($cacheDirectory . 'lesscache/');
+
+		// If "importDirectories" is not an array, split it to an array. Afterwards check for integer keys and convert them to oyejorge/lessphp format.
+		$importDirectories = array();
+		if (isset($configuration['importDirectories'])) {
+			if (isset($configuration['importDirectories'])) {
+				$importDirectories = (array) \TYPO3\CMS\Core\Utility\GeneralUtility::trimExplode(',', $configuration['importDirectories']);
+			}
+			if (isset($configuration['importDirectories.'])) {
+				$importDirectories = array_replace($importDirectories, $configuration['importDirectories.']);
+			}
+			$directories = array();
+			foreach ($importDirectories as $path => $directory) {
+				if (is_integer($path)) {
+					$absolutePath = \TYPO3\CMS\Core\Utility\GeneralUtility::getFileAbsFileName($directory);
+				} else {
+					$absolutePath = \TYPO3\CMS\Core\Utility\GeneralUtility::getFileAbsFileName($path);
+				}
+				$directories[$absolutePath] = str_replace(PATH_site, '', $absolutePath);
+			}
+			$importDirectories = $directories;
+		}
+
+		$options = array(
+			'compress' => (isset($configuration['compress']) ? (boolean) $configuration['compress'] : TRUE),
+			'relativeUrls' => (isset($configuration['relativeUrls']) ? (boolean) $configuration['relativeUrls'] : TRUE),
+			'strictUnits' => (isset($configuration['strictUnits']) ? (boolean) $configuration['strictUnits'] : FALSE),
+			'strictMath' => (isset($configuration['strictMath']) ? (boolean) $configuration['strictMath'] : FALSE),
+			'import_dirs' => $importDirectories,
+			'cache_dir' => $configuration['cacheDirectory'],
+		);
+
+		$fileName = NULL;
+		if ($saveAsFile === TRUE) {
+			if (@is_file($content)) {
+				$fileName = pathinfo($content, PATHINFO_FILENAME);
+				$fileName = $cacheDirectory . $fileName . '.' . $cacheIdentifier . '.css';
+			} else {
+				$fileName = $cacheDirectory . 'compliled-less-file.' . $cacheIdentifier . '.css';
+			}
+		} else if (is_string($saveAsFile)) {
+			$fileName = $cacheDirectory . $saveAsFile;
+		}
+
+		// Using Reset instead of SetOptions because SetOptions will throw an exception if more then one LESS file is parsed and one of them needs an import.
+		// For example adx_twitter_bootstrap loads "bootstrap.less" first and afterwards "datepicker3.less" which needs an import of "mixins/buttons.less" of bootstrap. This will fail without reset.
+		$this->less->Reset($options);
+
+		// At least parse LESS.
+		if (@is_file($content)) {
+			$siteUrl = dirname(str_replace(PATH_site, '', $content));
+			$this->less->parseFile($content, $siteUrl);
+		} else {
+			$this->less->parse($content);
+		}
+
+		if (isset($configuration['variables.'])) {
+			$this->less->modifyVars($configuration['variables.']);
+		}
+
+		$content = $this->less->getCss();
+
+		// Try to delete already cached files if exists.
+		$cachedFileName = preg_replace('/\.[0-9a-z]{40}\.css/', '.*.css', $fileName);
+		$cachedFiles = glob($cachedFileName);
+		foreach ($cachedFiles as $cachedFile) {
+			unlink($cachedFile);
+		}
+
+		// Save cache depended on sha1 sum of parsed files.
+		$parsedFiles = $this->less->AllParsedFiles();
+		$cacheFiles = array();
+		foreach ($parsedFiles as $parsedFile) {
+			$cacheFiles[$parsedFile] = sha1_file($parsedFile);
+		}
+		$this->cache->set('parsedFiles_' . $cacheIdentifier, $cacheFiles);
+		$dataCacheKey = $fileName ? 'parsedFile_' : 'parsedData_';
+		$this->cache->set($dataCacheKey . $cacheIdentifier, $fileName ?: $content);
+
+		if ($fileName === NULL) {
+			return $content;
+		} else {
+			// Write temporary file.
+			$temporaryFile = \TYPO3\CMS\Core\Utility\GeneralUtility::getFileAbsFileName($fileName);
+			\TYPO3\CMS\Core\Utility\GeneralUtility::writeFileToTypo3tempDir($temporaryFile, $content);
+			return $fileName;
 		}
 	}
 
@@ -69,362 +188,38 @@ class Less implements \TYPO3\CMS\Core\SingletonInterface {
 
 		$contentObject = $GLOBALS['TSFE']->cObj;
 
-		// If the lib is not added to page yet, add it!
-		$this->addClientCompilerLibrary();
+		$pathAndFilename = $this->thisConfig['contentCSS'];
+		$result = preg_match('/^(.*\.less)(?:\?+.*(?:lessCompilerContext=([^&]*)))?.*$/i', $pathAndFilename, $matches);
 
-		// Append LESS file
-		if ($configuration['lessFile'] || $configuration['lessFile.']) {
-
-			$file = \TYPO3\CMS\Core\Utility\GeneralUtility::getFileAbsFileName($contentObject->stdWrap($configuration['lessFile'], $configuration['lessFile.']));
-
-			if ($this->isClientSide()) {
-				// Get file path
-				$file = \TYPO3\CMS\Core\Utility\GeneralUtility::getFileAbsFileName($contentObject->stdWrap($configuration['lessFile'], $configuration['lessFile.']));
-				$file = str_replace(PATH_site, '', $file);
-			} else {
-				// Get content
-				$file = $this->compileLessAndWriteTempFile($file, $contentObject);
-			}
-
-			$this->addLessFile($file, $configuration);
+		// If not a LESS file, nothing else to do.
+		if ($result === 0) {
+			return parent::getContentCssFileName();
 		}
 
-		// Add LESS URL, only lesscss!
-		if ($this->isClientSide() && ($configuration['lessUrl'] || $configuration['lessUrl.'])) {
-			// Get file URL
-			$file = $contentObject->stdWrap($configuration['lessUrl'], $configuration['lessUrl.']);
-			$this->addLessFile($file, $configuration);
+		// Get compiler context if set.
+		$context = isset($matches[2]) ? $matches[2] : NULL;
+		$absolutePathAndFilename = \TYPO3\CMS\Core\Utility\GeneralUtility::getFileAbsFileName($matches[1]);
+		$configuration = \AdGrafik\AdxLess\Utility\LessUtility::getConfiguration($this->currentPage, $context);
+
+		// Append LESS file.
+		$lessFile = isset($configuration['less.']['file']) ? $configuration['less.']['file'] : '';
+		if (isset($configuration['less.']['file.'])) {
+			$lessFile = \TYPO3\CMS\Core\Utility\GeneralUtility::getFileAbsFileName($contentObject->stdWrap($lessFile, $configuration['less.']['file.']));
+		}
+		if ($lessFile) {
+			$fileName = $this->compile($lessFile, $configuration['less.']['configuration.']);
+			\AdGrafik\AdxLess\Utility\LessUtility::addLessFile($fileName, $configuration);
 		}
 
-		// Add LESS data
-		if ($configuration['lessData'] || $configuration['lessData.']) {
-
-			$content = $contentObject->stdWrap($configuration['lessData'], $configuration['lessData.']);
-
-			if ($this->isServerSide()) {
-				// Get content
-				$content = $this->compileLess($content, $contentObject);
-			}
-
-			// Write temp file
-			$file = \TYPO3\CMS\Frontend\Page\PageGenerator::inline2TempFile($content, 'css');
-
-			$this->addLessFile($file, $configuration);
+		// Add LESS data.
+		$lessData = isset($configuration['less.']['data']) ? $configuration['less.']['data'] : '';
+		if (isset($configuration['less.']['data.'])) {
+			$lessData = $contentObject->stdWrap($lessData, $configuration['less.']['data.']);
 		}
-	}
-
-	/**
-	 * @param string $content
-	 * @param mixed $reference Page ID or content object tslib_cObj
-	 * @return mixed
-	 */
-	public function compileLessAndWriteTempFile($content, $reference) {
-
-		$content = $this->compileLess($content, $reference);
-		// Write temp file
-		$file = \TYPO3\CMS\Frontend\Page\PageGenerator::inline2TempFile($content, 'css');
-
-		return $file;
-	}
-
-	/**
-	 * @param string $content
-	 * @param mixed $reference Page ID or content object tslib_cObj
-	 * @return string
-	 */
-	public function compileLess($content, $reference) {
-
-		if (@is_file($content)) {
-			$content = \TYPO3\CMS\Core\Utility\GeneralUtility::getUrl($content);
+		if ($lessData) {
+			$fileName = $this->compile($lessData, $configuration['less.']['configuration.']);
+			\AdGrafik\AdxLess\Utility\LessUtility::addLessFile($fileName, $configuration);
 		}
-
-		$configuration = $this->getConfiguration($reference, 'lessphp');
-		$less = new \lessc;
-
-		if ($configuration['formatter']) {
-			$less->setFormatter($configuration['formatter']);
-		}
-
-		if ($configuration['preserveComments']) {
-			$less->setPreserveComments((boolean) $configuration['preserveComments']);
-		}
-
-		if (count((array) $configuration['variables.'])) {
-
-			$variables = array();
-			foreach ($configuration['variables.'] as $key => $value) {
-
-				if (strpos($key, '.')) {
-					$variables[substr($key, 0, -1)] = $reference->stdWrap($value, $configuration['variables.'][$key]);
-				} else {
-					$variables[$key] = $value;
-				}
-			}
-
-			$less->setVariables($variables);
-		}
-
-		if ($configuration['importDirectories']) {
-
-			$importDirectories = \TYPO3\CMS\Core\Utility\GeneralUtility::trimExplode(',', $configuration['importDirectories']);
-			foreach ($importDirectories as &$importDirectory) {
-				$importDirectory = \TYPO3\CMS\Core\Utility\GeneralUtility::getFileAbsFileName($importDirectory);
-			}
-
-			$less->setImportDir($importDirectories);
-		}
-
-		$content = $less->compile($content);
-
-		return $content;
-	}
-
-	/**
-	 * Returns TRUE if the lib should be integrated
-	 * 
-	 * @return boolean
-	 */
-	public function integrateClientCompiler() {
-
-		if (is_object($GLOBALS['TSFE'])) {
-
-			if ($this->getDontIntegrateInRootline() && count($GLOBALS['TSFE']->rootLine) > 0) {
-				foreach ($GLOBALS['TSFE']->rootLine as $page) {
-					if (in_array($page['uid'], array_values(\TYPO3\CMS\Core\Utility\GeneralUtility::trimExplode(',', $this->getDontIntegrateInRootline(), TRUE)))) {
-						return FALSE;
-					}
-				}
-			}
-
-			return ( ! $this->getDontIntegrateOnUID() || ! in_array($GLOBALS['TSFE']->id, array_values(\TYPO3\CMS\Core\Utility\GeneralUtility::trimExplode(',', $this->getDontIntegrateOnUID(), TRUE))));
-		}
-
-		return FALSE;
-	}
-
-	/**
-	 * @return string
-	 */
-	public function getClientCompilerVersion() {
-		return isset($this->extensionConfiguration['clientCompilerVersion'])
-			? $this->extensionConfiguration['clientCompilerVersion']
-			: '0.3.9';
-	}
-
-	/**
-	 * @return string
-	 */
-	public function getDontIntegrateInRootline() {
-		return isset($this->extensionConfiguration['dontIntegrateInRootline'])
-			? $this->extensionConfiguration['dontIntegrateInRootline']
-			: '';
-	}
-
-	/**
-	 * @return string
-	 */
-	public function getDontIntegrateOnUID() {
-		return isset($this->extensionConfiguration['dontIntegrateOnUID'])
-			? $this->extensionConfiguration['dontIntegrateOnUID']
-			: '';
-	}
-
-	/**
-	 * @return boolean
-	 */
-	public function isAlwaysIntegrate() {
-		return isset($this->extensionConfiguration['alwaysIntegrate'])
-			? (boolean) $this->extensionConfiguration['alwaysIntegrate']
-			: FALSE;
-	}
-
-	/**
-	 * @return boolean
-	 */
-	public function isClientSide() {
-		return isset($this->extensionConfiguration['compiler'])
-			? ($this->extensionConfiguration['compiler'] == 'lesscss')
-			: FALSE;
-	}
-
-	/**
-	 * @return boolean
-	 */
-	public function isServerSide() {
-		return isset($this->extensionConfiguration['compiler'])
-			? ($this->extensionConfiguration['compiler'] == 'lessphp')
-			: TRUE;
-	}
-
-	/**
-	 * Get the configuration of adx_less
-	 * 
-	 * @return array
-	 */
-	protected function getExtensionConfiguration() {
-		return (array) @unserialize($GLOBALS['TYPO3_CONF_VARS']['EXT']['extConf']['adx_less']);
-	}
-
-	/**
-	 * @param mixed $reference Page ID or content object tslib_cObj
-	 * @return array
-	 */
-	protected function getConfiguration($reference, $key = '') {
-
-		if (is_object($reference)) {
-
-			$objectManager = \TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance('TYPO3\\CMS\\Extbase\\Object\\ObjectManager');
-			$configurationManager = $objectManager->get('TYPO3\\CMS\\Extbase\\Configuration\\ConfigurationManager');
-			$configurationManager->setContentObject($reference);
-			$settings = $configurationManager->getConfiguration(
-				\TYPO3\CMS\Extbase\Configuration\ConfigurationManager::CONFIGURATION_TYPE_FULL_TYPOSCRIPT
-			);
-
-			$settings = isset($settings['plugin.']['tx_adxless.'])
-				? $settings['plugin.']['tx_adxless.']
-				: array();
-
-		} else {
-
-			$pageSelect = \TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance('TYPO3\\CMS\\Frontend\\Page\\PageRepository');
-			$rootLine = $pageSelect->getRootLine($reference);
-			$tsParser = \TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance('TYPO3\\CMS\\Core\\TypoScript\\ExtendedTemplateService');
-			$tsParser->tt_track = 0;
-			$tsParser->init();
-			$tsParser->runThroughTemplates($rootLine);
-			$tsParser->generateConfig();
-
-			$settings = isset($tsParser->setup['plugin.']['tx_adxless.'])
-				? $tsParser->setup['plugin.']['tx_adxless.']
-				: array();
-		}
-
-		return $key ? $settings[$key . '.'] : $settings;
-	}
-
-	/**
-	 * @return string
-	 */
-	protected function getClientCompilerOptions() {
-
-		$contentObject = $GLOBALS['TSFE']->cObj;
-		$allWrap = '';
-
-		$compilerOptions = $this->getConfiguration($contentObject, 'lesscss');
-
-		if ($compilerOptions) {
-
-			$options = array();
-			if ($compilerOptions['env'] || $compilerOptions['env.']) {
-				$env = $contentObject->stdWrap($compilerOptions['env'], $compilerOptions['env.']);
-				if ($env && $env != 'production') {
-					$options[] = 'env: \'' . $env . '\'';
-				}
-			}
-			if (isset($compilerOptions['async']) || isset($compilerOptions['async.'])) {
-				$async = $contentObject->stdWrap($compilerOptions['async'], $compilerOptions['async.']);
-				if ($async) {
-					$options[] = 'async: true';
-				}
-			}
-			if (isset($compilerOptions['fileAsync']) || isset($compilerOptions['fileAsync.'])) {
-				$fileAsync = $contentObject->stdWrap($compilerOptions['fileAsync'], $compilerOptions['fileAsync.']);
-				if ($fileAsync) {
-					$options[] = 'fileAsync: true';
-				}
-			}
-			if ($compilerOptions['poll'] || $compilerOptions['poll.']) {
-				$poll = intval($contentObject->stdWrap($compilerOptions['poll'], $compilerOptions['poll.']));
-				if ($poll && $poll != 1500) {
-					$options[] = 'poll: ' . $poll;
-				}
-			}
-			if ($compilerOptions['functions'] || $compilerOptions['functions.']) {
-				$functions = $contentObject->stdWrap($compilerOptions['functions'], $compilerOptions['functions.']);
-				if ($functions) {
-					$options[] = 'functions: ' . $functions;
-				}
-			}
-			if ($compilerOptions['dumpLineNumbers'] || $compilerOptions['dumpLineNumbers.']) {
-				$dumpLineNumbers = $contentObject->stdWrap($compilerOptions['dumpLineNumbers'], $compilerOptions['dumpLineNumbers.']);
-				if ($dumpLineNumbers && $dumpLineNumbers !== 'comments') {
-					$options[] = 'dumpLineNumbers: ' . $dumpLineNumbers;
-				}
-			}
-			if (isset($compilerOptions['relativeUrls']) || isset($compilerOptions['relativeUrls.'])) {
-				$relativeUrls = $contentObject->stdWrap($compilerOptions['relativeUrls'], $compilerOptions['relativeUrls.']);
-				if ($relativeUrls) {
-					$options[] = 'relativeUrls: true';
-				}
-			}
-			if ($compilerOptions['rootpath'] || $compilerOptions['rootpath.']) {
-				$rootpath = $contentObject->stdWrap($compilerOptions['rootpath'], $compilerOptions['rootpath.']);
-				if ($rootpath) {
-					$options[] = 'rootpath: \'' . $rootpath . '\'';
-				}
-			}
-
-			$allWrap = '<script type="text/javascript">' . PHP_EOL;
-			$allWrap .= 'less = { ';
-			$allWrap .= implode(', ', $options);
-			$allWrap .= ' };' . PHP_EOL;
-			$allWrap .= '</script>' . PHP_EOL . '|';
-		}
-
-		return $allWrap;
-	}
-
-	/**
-	 * Add LESS file to the HTML
-	 * 
-	 * @param string $file
-	 * @param array $configuration
-	 * @return void
-	 */
-	protected function addLessFile($file, $configuration = array()) {
-
-		$pageRenderer = $GLOBALS['TSFE']->getPageRenderer();
-		$pageRenderer->addCssFile(
-			$file,
-			$this->isClientSide() ? 'stylesheet/less' : 'stylesheet',
-			$configuration['media'] ? $configuration['media'] : 'all',
-			$configuration['title'] ? $configuration['title'] : '',
-			$configuration['compress'] ? $configuration['compress'] : TRUE,
-			$configuration['forceOnTop'] ? $configuration['forceOnTop'] : FALSE,
-			$configuration['allWrap'] ? $configuration['allWrap'] : '',
-			$excludeFromConcatenation = $configuration['excludeFromConcatenation'] ? $configuration['excludeFromConcatenation'] : FALSE
-		);
-	}
-
-	/**
-	 * Get the script URL.
-	 *
-	 * @return mixed HTML Script tag to load the JavaScript library, on error FALSE
-	 */
-	protected function getClientCompilerUrl() {
-
-		$url = \TYPO3\CMS\Core\Utility\ExtensionManagementUtility::extPath('adx_less') . 'Resources/Public/JavaScript/LESSCSS/less-' . $this->getClientCompilerVersion() . '.min.js';
-		$url = str_replace(PATH_site, '', $url);
-
-		if (!file_exists(PATH_site . $url)) {
-			\TYPO3\CMS\Core\Utility\GeneralUtility::devLog('\'' . $url . '\' does not exists!', 'adx_less', 3);
-			return FALSE;
-		}
-
-		// Adding absRefPrefix here, makes sure that included correctly
-		$url = $GLOBALS['TSFE']->absRefPrefix . $url;
-
-		return $url;
-	}
-
-	/**
-	 * Get the script tag.
-	 *
-	 * @param boolean $urlOnly If TRUE, only the URL is returned, not a full script tag
-	 * @return mixed HTML Script tag to load the JavaScript library, on error FALSE
-	 */
-	protected function getClientCompilerTag() {
-		return '<script type="text/javascript" src="' . $this->getClientCompilerUrl() . '"></script>';
 	}
 
 }
