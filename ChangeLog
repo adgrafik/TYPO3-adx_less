@@ -1,12 +1,2 @@
 
-[TASK] Made ready for TYPO3 CMS 7.3.
-[TASK] Removed client side LESS parser lesscss.
-[TASK] Removed server side LESS parser leafo/lessphp.
-[TASK] Added server side LESS parser oyejorge/lessphp v1.7.0.3.
-[TASK] Changed static TypoScript directory. Update of included static tamplate required.
-[TASK] Rewrite many classes.
-[TASK] Optimized cache feature.
-[TASK] Added new fetature of RteHtmlAreaBase to handle more then one contentCSS.
-[FEATURE] Added XCLASS for tinymce4_rte.
-
 @see https://github.com/adgrafik/TYPO3-adx_less/commits
