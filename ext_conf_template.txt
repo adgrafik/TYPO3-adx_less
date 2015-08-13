@@ -1,3 +1,3 @@
 
-# cat=basic/10; type=options[LESSPHP 1.7.0.3]; label=Compiler version: Defines the LESSPHP version.
+# cat=basic/10; type=options[1.7.0.3]; label=Compiler version: Defines the LESSPHP version.
 compilerVersion = 1.7.0.3
