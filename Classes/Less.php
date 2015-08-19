@@ -124,7 +124,10 @@ class Less implements \TYPO3\CMS\Core\SingletonInterface {
 
 		$fileName = NULL;
 		if ($saveAsFile === TRUE) {
-			if (@is_file($content)) {
+			if (isset($configuration['targetFile']) && $configuration['targetFile']) {
+				$fileName = \TYPO3\CMS\Core\Utility\GeneralUtility::getFileAbsFileName($configuration['targetFile']);
+			}
+			else if (@is_file($content)) {
 				$fileName = pathinfo($content, PATHINFO_FILENAME);
 				$fileName = $cacheDirectory . $fileName . '.' . $cacheIdentifier . '.css';
 			} else {

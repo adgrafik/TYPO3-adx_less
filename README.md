@@ -48,6 +48,7 @@ strictUnits | `boolean` | `FALSE`
 strictMath | `boolean` | `FALSE`
 importDirectories | `array | string` | `NULL`
 cacheDirectory | `string` | typo3temp/lesscache/
+targetFile | `string` | `NULL`
 
 
 ## Hooks

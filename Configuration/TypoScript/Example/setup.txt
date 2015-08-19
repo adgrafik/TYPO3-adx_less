@@ -10,6 +10,10 @@ plugin.tx_adxless {
 		# Comma seperated string or array with path => directory.
 		# @see http://lessphp.gpeasy.com/
 		importDirectories = 
+
+		# Define the path for writing the parsed file.
+		# By default it will be saved in the given 'cacheDirectory' with the name format 'filename.sha1.css'.
+#		targetFile = 
 	}
 	
 	render-in-another-context < .lessphp
