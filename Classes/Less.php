@@ -177,7 +177,7 @@ class Less implements \TYPO3\CMS\Core\SingletonInterface {
 		} else {
 			// Write temporary file.
 			$temporaryFile = \TYPO3\CMS\Core\Utility\GeneralUtility::getFileAbsFileName($fileName);
-			\TYPO3\CMS\Core\Utility\GeneralUtility::writeFileToTypo3tempDir($temporaryFile, $content);
+			\TYPO3\CMS\Core\Utility\GeneralUtility::writeFile($temporaryFile, $content);
 			return $fileName;
 		}
 	}
