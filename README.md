@@ -92,6 +92,23 @@ or append multiply files
     RTE.default.init.content_css = path/to/my/style-file-1.less,path/to/my/style-file-2.less,path/to/my/style-file-3.less
 
 
+### Extension-hook tinymce4_rte
+
+    RTE.default.contentCSS = path/to/my/style-file.less
+
+or append multiply files by comma seperated string
+
+    RTE.default.contentCSS = path/to/my/style-file-1.less,path/to/my/style-file-2.less,path/to/my/style-file-3.less
+
+or append multiply files by key
+
+    RTE.default.contentCSS {
+    	file1 = path/to/my/style-file-1.less
+    	file2 = path/to/my/style-file-2.less
+    	file3 = path/to/my/style-file-3.less
+    }
+
+
 ### Extension-hook rtehtmlarea
 
     RTE.default.init.contentCSS = path/to/my/style-file.less
