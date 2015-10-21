@@ -28,8 +28,8 @@ $EM_CONF[$_EXTKEY] = array (
 	'clearcacheonload' => 0,
 	'lockType' => '',
 	'author' => 'Arno Dudek',
-	'author_email' => '2015 Arno Dudek <webmaster@adgrafik.at',
-	'author_company' => 'AdGrafik',
+	'author_email' => 'webmaster@adgrafik.at',
+	'author_company' => 'ad:grafik',
 	'CGLcompliance' => NULL,
 	'CGLcompliance_note' => NULL,
 	'constraints' => 
@@ -38,7 +38,6 @@ $EM_CONF[$_EXTKEY] = array (
 		array (
 			'typo3' => '6.2.0-7.99.99',
 			'extbase' => '6.2.0-7.99.99',
-			'cms' => '',
 		),
 		'conflicts' => 
 		array (
