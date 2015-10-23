@@ -182,49 +182,6 @@ class Less implements \TYPO3\CMS\Core\SingletonInterface {
 		}
 	}
 
-	/**
-	 * @param string $content Content input, ignore (just put blank string)
-	 * @param array $configuration TypoScript configuration of the plugin!
-	 * @return void
-	 */
-	public function addLess($content, $configuration) {
-
-		$contentObject = $GLOBALS['TSFE']->cObj;
-
-		$pathAndFilename = $this->thisConfig['contentCSS'];
-		$result = preg_match('/^(.*\.less)(?:\?+.*(?:lessCompilerContext=([^&]*)))?.*$/i', $pathAndFilename, $matches);
-
-		// If not a LESS file, nothing else to do.
-		if ($result === 0) {
-			return parent::getContentCssFileName();
-		}
-
-		// Get compiler context if set.
-		$context = isset($matches[2]) ? $matches[2] : NULL;
-		$absolutePathAndFilename = \TYPO3\CMS\Core\Utility\GeneralUtility::getFileAbsFileName($matches[1]);
-		$configuration = \AdGrafik\AdxLess\Utility\LessUtility::getConfiguration($this->currentPage, $context);
-
-		// Append LESS file.
-		$lessFile = isset($configuration['less.']['file']) ? $configuration['less.']['file'] : '';
-		if (isset($configuration['less.']['file.'])) {
-			$lessFile = \TYPO3\CMS\Core\Utility\GeneralUtility::getFileAbsFileName($contentObject->stdWrap($lessFile, $configuration['less.']['file.']));
-		}
-		if ($lessFile) {
-			$fileName = $this->compile($lessFile, $configuration['less.']['configuration.']);
-			\AdGrafik\AdxLess\Utility\LessUtility::addLessFile($fileName, $configuration);
-		}
-
-		// Add LESS data.
-		$lessData = isset($configuration['less.']['data']) ? $configuration['less.']['data'] : '';
-		if (isset($configuration['less.']['data.'])) {
-			$lessData = $contentObject->stdWrap($lessData, $configuration['less.']['data.']);
-		}
-		if ($lessData) {
-			$fileName = $this->compile($lessData, $configuration['less.']['configuration.']);
-			\AdGrafik\AdxLess\Utility\LessUtility::addLessFile($fileName, $configuration);
-		}
-	}
-
 }
 
 ?>

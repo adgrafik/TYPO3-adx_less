@@ -29,15 +29,17 @@ $EM_CONF[$_EXTKEY] = array (
 	'lockType' => '',
 	'author' => 'Arno Dudek',
 	'author_email' => 'webmaster@adgrafik.at',
-	'author_company' => 'AdGrafik',
+	'author_company' => 'ad:grafik',
 	'CGLcompliance' => NULL,
 	'CGLcompliance_note' => NULL,
 	'constraints' => 
 	array (
 		'depends' => 
 		array (
+			'cms' => '',
+			'version' => '',
+			'php' => '5.3.7-0.0.0',
 			'typo3' => '6.2.0-7.99.99',
-			'extbase' => '6.2.0-7.99.99',
 		),
 		'conflicts' => 
 		array (
