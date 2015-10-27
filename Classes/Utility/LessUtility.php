@@ -25,6 +25,7 @@ namespace AdGrafik\AdxLess\Utility;
  *  This copyright notice MUST APPEAR in all copies of the script!
  ***************************************************************/
 
+use TYPO3\CMS\Core\Utility\GeneralUtility;
 
 class LessUtility {
 
@@ -60,7 +61,7 @@ class LessUtility {
 
 			if (is_object($contentObject)) {
 
-				$objectManager = \TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance('TYPO3\\CMS\\Extbase\\Object\\ObjectManager');
+				$objectManager = GeneralUtility::makeInstance('TYPO3\\CMS\\Extbase\\Object\\ObjectManager');
 				$configurationManager = $objectManager->get('TYPO3\\CMS\\Extbase\\Configuration\\ConfigurationManager');
 				$configurationManager->setContentObject($contentObject);
 				self::$configuration = $configurationManager->getConfiguration(
@@ -73,9 +74,9 @@ class LessUtility {
 
 			} else {
 
-				$pageSelect = \TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance('TYPO3\\CMS\\Frontend\\Page\\PageRepository');
+				$pageSelect = GeneralUtility::makeInstance('TYPO3\\CMS\\Frontend\\Page\\PageRepository');
 				$rootLine = $pageSelect->getRootLine($contentObject);
-				$tsParser = \TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance('TYPO3\\CMS\\Core\\TypoScript\\ExtendedTemplateService');
+				$tsParser = GeneralUtility::makeInstance('TYPO3\\CMS\\Core\\TypoScript\\ExtendedTemplateService');
 				$tsParser->tt_track = 0;
 				$tsParser->init();
 				$tsParser->runThroughTemplates($rootLine);
@@ -101,12 +102,13 @@ class LessUtility {
 
 		$less = GeneralUtility::makeInstance('AdGrafik\\AdxLess\\Less');
 
-		$compilerSettings = isset($settings['compilerSettings']) ? $settings['compilerSettings'] : array();
+		$compilerSettings = isset($configuration['compilerSettings.']) ? $configuration['compilerSettings.'] : array();
+
 		// returnUri can not be FALSE or "absolute".
 		$compilerSettings['returnUri'] = isset($compilerSettings['returnUri']) ? $compilerSettings['returnUri'] : TRUE;
 		$compilerSettings['returnUri'] = ($compilerSettings['returnUri'] === TRUE || $compilerSettings['returnUri'] === 'siteURL') ? $returnUri : TRUE;
 
-		$includeCssSettings = isset($settings['includeCssSettings']) ? $settings['includeCssSettings'] : array();
+		$includeCssSettings = isset($configuration['includeCssSettings.']) ? $configuration['includeCssSettings.'] : array();
 		$includeCssSettings['media'] = isset($includeCssSettings['media']) ? $includeCssSettings['media'] : 'all';
 		$includeCssSettings['title'] = isset($includeCssSettings['title']) ? $includeCssSettings['title'] : '';
 		$includeCssSettings['compress'] = isset($includeCssSettings['compress']) ? (boolean) $includeCssSettings['compress'] : TRUE;

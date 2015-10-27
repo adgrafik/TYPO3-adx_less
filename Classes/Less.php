@@ -53,8 +53,7 @@ class Less implements \TYPO3\CMS\Core\SingletonInterface {
 	 *
 	 * @param string $content		TYPO3 path and filename or a string.
 	 * @param array $configuration
-	 * @return string				Returns the parsed string if $saveAsFile is FALSE, else if it's TRUE this methode returns the new relative file name.
-	 * 								If $saveAsFile is a string, the methode expected a file name and saves the parsed content there.
+	 * @return string
 	 */
 	public function compile($content, array $configuration) {
 
@@ -153,6 +152,8 @@ class Less implements \TYPO3\CMS\Core\SingletonInterface {
 		$absoluteWritePathAndFilename = $absoluteWritePath . $targetFilename;
 		if ($returnUri === 'absolute') {
 			$result = $absoluteWritePathAndFilename;
+		} else if ($returnUri === 'siteURL') {
+			return str_replace(PATH_site, GeneralUtility::getIndpEnv('TYPO3_SITE_URL'), $absoluteWritePathAndFilename);
 		} else if ($returnUri) {
 			$result = str_replace(PATH_site, '', $absoluteWritePathAndFilename);
 		} else {

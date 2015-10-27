@@ -22,7 +22,7 @@ page.headerData.1367742474 {
 
 	# Set the USER content object where you want. The function includeCss will generate the CSS file and append it with the PageRenderer.
 	10 = USER
-	10.userFunc = EXT:adx_less/Classes/Less.php:AdGrafik\AdxLess\Utility\LessUtility->includeCss
+	10.userFunc = AdGrafik\AdxLess\Utility\LessUtility->includeCss
 	10.compilerSettings =< plugin.tx_adxless.lessphp
 	10.includeCssSettings {
 		media = print
