@@ -14,12 +14,12 @@ class T3libTceMainHook {
 	 */
 	function clearCachePostProc($parameters, \TYPO3\CMS\Core\DataHandling\DataHandler $parentObject) {
 
-		if (isset($params['cacheCmd']) === FALSE) {
+		if (isset($parameters['cacheCmd']) === FALSE) {
 			return;
 		}
 
-		if ($params['cacheCmd'] == 'all') {
-			$absoluteWritePath = GeneralUtility::getFileAbsFileName('typo3temp/adx_less/');
+		if ($parameters['cacheCmd'] == 'all') {
+			$absoluteWritePath = GeneralUtility::getFileAbsFileName('typo3temp/tx_adxless/');
 			GeneralUtility::rmdir($absoluteWritePath, TRUE);
 		}
 	}

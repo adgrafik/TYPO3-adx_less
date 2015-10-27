@@ -10,6 +10,8 @@ This TYPO3 extension contains the LESS compiler http://lessphp.gpeasy.com/ which
 - hooks for rtehtmlarea, tinymce_rte and tinymce4_rte
 - and a ViewHelper for Fluid.
 
+To delete or regenerate compiled files proceed the "Flush general caches".
+
 
 ## TypoScript
 
