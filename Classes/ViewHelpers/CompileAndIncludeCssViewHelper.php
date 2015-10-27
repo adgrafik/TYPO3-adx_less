@@ -26,7 +26,7 @@ namespace AdGrafik\AdxLess\ViewHelpers;
  ***************************************************************/
 
 
-class CompileViewHelper extends \TYPO3\CMS\Fluid\Core\ViewHelper\AbstractViewHelper {
+class CompileAndIncludeCssViewHelper extends \TYPO3\CMS\Fluid\Core\ViewHelper\AbstractViewHelper {
 
 	/**
 	 * @param string $data
@@ -38,10 +38,11 @@ class CompileViewHelper extends \TYPO3\CMS\Fluid\Core\ViewHelper\AbstractViewHel
 	 * @param boolean $strictMath
 	 * @param mixed $targetFilename
 	 * @param mixed $returnUri
+	 * @param array $includeCssSettings
 	 * @return string
 	 * @api
 	 */
-	public function render($data = NULL, $compress = NULL, array $variables = NULL, $importDirectories = NULL, $relativeUrls = NULL, $strictUnits = NULL, $strictMath = NULL, $targetFilename = TRUE, $returnUri = NULL) {
+	public function render($data = NULL, $compress = NULL, array $variables = NULL, $importDirectories = NULL, $relativeUrls = NULL, $strictUnits = NULL, $strictMath = NULL, $targetFilename = TRUE, $returnUri = TRUE, array $includeCssSettings = NULL) {
 
 		if ($data === NULL) {
 			$data = $this->renderChildren();
@@ -58,13 +59,26 @@ class CompileViewHelper extends \TYPO3\CMS\Fluid\Core\ViewHelper\AbstractViewHel
 			'strictUnits' => $strictUnits,
 			'strictMath' => $strictMath,
 			'targetFilename' => $targetFilename,
-			'returnUri' => $returnUri,
+			// returnUri can not be FALSE or "absolute".
+			'returnUri' => ($returnUri === TRUE || $returnUri === 'siteURL') ? $returnUri : TRUE,
 		);
 
 		$less = \TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance('AdGrafik\\AdxLess\\Less');
 		$content = $less->compile($data, $configuration);
 
-		return $content;
+		$pageRenderer = $GLOBALS['TSFE']->getPageRenderer();
+		$pageRenderer->addCssFile(
+			$content,
+			'stylesheet',
+			$includeCssSettings['media'] ? $includeCssSettings['media'] : 'all',
+			$includeCssSettings['title'] ? $includeCssSettings['title'] : '',
+			$includeCssSettings['compress'] ? $includeCssSettings['compress'] : TRUE,
+			$includeCssSettings['forceOnTop'] ? $configuration['forceOnTop'] : FALSE,
+			$includeCssSettings['allWrap'] ? $includeCssSettings['allWrap'] : '',
+			$includeCssSettings['excludeFromConcatenation'] ? $includeCssSettings['excludeFromConcatenation'] : FALSE
+		);
+
+		return '';
 	}
 }
 

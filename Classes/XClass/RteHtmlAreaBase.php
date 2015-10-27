@@ -47,10 +47,6 @@ class RteHtmlAreaBase extends \TYPO3\CMS\Rtehtmlarea\RteHtmlAreaBase {
 	 */
 	public function getContentCssFileNames() {
 
-		if (isset($this->thisConfig['contentCSS']) && $this->thisConfig['contentCSS']) {
-			$this->thisConfig['contentCSS'] = $this->parseLessFile($this->thisConfig['contentCSS']);
-		}
-
 		$contentCssFiles = is_array($this->thisConfig['contentCSS.']) ? $this->thisConfig['contentCSS.'] : array();
 
 		foreach ($contentCssFiles as $key => &$contentCssFile) {
@@ -65,19 +61,14 @@ class RteHtmlAreaBase extends \TYPO3\CMS\Rtehtmlarea\RteHtmlAreaBase {
 	 */
 	private function parseLessFile($contentCssFile) {
 
-		$result = preg_match('/^(.*\.less)(?:\?+.*(?:lessCompilerContext=([^&]*)))?.*$/', $contentCssFile, $matches);
-
 		// If not a LESS file, nothing else to do.
-		if ($result === 0) {
+		if (pathinfo($contentCssFile,  PATHINFO_EXTENSION) !== 'less') {
 			return $contentCssFile;
 		}
 
-		// Get compiler context if set.
-		$context = isset($matches[2]) ? $matches[2] : NULL;
-		$absolutePathAndFilename = \TYPO3\CMS\Core\Utility\GeneralUtility::getFileAbsFileName($matches[1]);
-		$configuration = \AdGrafik\AdxLess\Utility\LessUtility::getConfiguration($this->thePid, $context);
-
+		$configuration = \AdGrafik\AdxLess\Utility\LessUtility::getConfiguration($this->thePid);
 		$less = \TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance('AdGrafik\\AdxLess\\Less');
+
 		return $less->compile($absolutePathAndFilename, $configuration);
 	}
 

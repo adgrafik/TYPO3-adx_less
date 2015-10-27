@@ -1,0 +1,3 @@
+[submodule "Vendor/oyejorge/lessphp"]
+	path = Vendor/oyejorge/lessphp
+	url = https://github.com/oyejorge/less.php.git

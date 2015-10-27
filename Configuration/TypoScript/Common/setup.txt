@@ -1,17 +1,16 @@
 
 plugin.tx_adxless {
 
-	# Default context of LESS file.
 	lessphp {
-
-		# This is the relative path where the parsed CSS files will be written. Default is "typo3temp/" 
-		# and the PHPLESS cache files will be written in the subdirectory "lesscache/".
-		# The files are named in the format "filename.sha1.css".
-		cacheDirectory = typo3temp/
 
 		# Comma seperated string or array with path => directory.
 		# @see http://lessphp.gpeasy.com/
 		importDirectories = 
+
+		returnUri = 1
+
+		# By default the files are named in the format "[filename].[sha1].less.css" if there are a file else "compliled.[sha1].less.css".
+		targetFilename = 
 
 		compress = 0
 
@@ -26,15 +25,3 @@ plugin.tx_adxless {
 		}
 	}
 }
-
-#
-# Use diffrent context for comiling LESS files.
-# The context for the LESS file in which it will be parsed can be set by adding a parameter to the LESS URL.
-# E.g.: page.includeCSS.myStyles = directory/to/the/file.less?lessCompilerContext=myContext
-#
-#plugin.tx_adxless {
-#	myContext < plugin.tx_adxless.lessphp
-#	myContext {
-#		cacheDirectory = another/directory/for/compiled/less/file/
-#	}
-#}

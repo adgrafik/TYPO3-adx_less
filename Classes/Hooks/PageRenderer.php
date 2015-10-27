@@ -25,6 +25,8 @@ namespace AdGrafik\AdxLess\Hooks;
  *  This copyright notice MUST APPEAR in all copies of the script!
  ***************************************************************/
 
+use TYPO3\CMS\Core\Utility\GeneralUtility;
+use AdGrafik\AdxLess\Utility\LessUtility;
 
 class PageRenderer {
 
@@ -37,24 +39,18 @@ class PageRenderer {
 	 */
 	public function preProcess($parameters, \TYPO3\CMS\Core\Page\PageRenderer $parentObject) {
 
-		$less = \TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance('AdGrafik\\AdxLess\\Less');
+		$less = GeneralUtility::makeInstance('AdGrafik\\AdxLess\\Less');
 		$cssFiles = array();
 
 		foreach ($parameters['cssFiles'] as $pathAndFilename => $cssConfiguration) {
 
-			$result = preg_match('/^(.*\.less)(?:\?+.*(?:lessCompilerContext=([^&]*)))?.*$/', $pathAndFilename, $matches);
-
 			// If not a LESS file, nothing else to do.
-			if ($result === 0) {
+			if (pathinfo($pathAndFilename,  PATHINFO_EXTENSION) !== 'less') {
 				$cssFiles[$pathAndFilename] = $cssConfiguration;
 				continue;
 			}
 
-			// Get compiler context if set.
-			$context = isset($matches[2]) ? $matches[2] : NULL;
-			$absolutePathAndFilename = \TYPO3\CMS\Core\Utility\GeneralUtility::getFileAbsFileName($matches[1]);
-			$configuration = \AdGrafik\AdxLess\Utility\LessUtility::getConfiguration($GLOBALS['TSFE']->cObj, $context);
-
+			$configuration = LessUtility::getConfiguration($GLOBALS['TSFE']->cObj);
 			$compiledPathAndFilename = $less->compile($pathAndFilename, $configuration);
 
 			$cssConfiguration['file'] = $compiledPathAndFilename;

@@ -13,8 +13,6 @@ This TYPO3 extension contains the LESS compiler http://lessphp.gpeasy.com/ which
 
 ## Configuration
 
-With the property context it's possible to render LESS files in different context and configuration. The default context is `lessphp` for backwards compatibility.
-
 	plugin.tx_adxless {
 	
 		lessphp {
@@ -26,13 +24,6 @@ With the property context it's possible to render LESS files in different contex
 			# Comma seperated string or array with path => directory.
 			# @see http://lessphp.gpeasy.com/
 			importDirectories = 
-		}
-	
-		render-in-another-context < .lessphp
-		render-in-another-context {
-			variables {
-				light-blue = @nice-blue + #444
-			}
 		}
 	}
 
@@ -48,7 +39,7 @@ strictUnits | `boolean` | `FALSE`
 strictMath | `boolean` | `FALSE`
 importDirectories | `array | string` | `NULL`
 cacheDirectory | `string` | typo3temp/lesscache/
-targetFile | `string` | `NULL`
+saveAsFile | `string` | `NULL`
 
 
 ## Hooks

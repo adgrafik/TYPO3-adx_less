@@ -96,10 +96,8 @@ class TinyMce4RteBase extends \SGalinski\Tinymce4Rte\Editors\RteBase {
 
 				$cssFile = GeneralUtility::getFileAbsFileName($pathAndFilename);
 
-				$result = preg_match('/^(.*\.less)(?:\?+.*(?:lessCompilerContext=([^&]*)))?.*$/', $pathAndFilename, $matches);
-
 				// If not a LESS file, nothing else to do.
-				if ($result === 0) {
+				if (pathinfo($cssFile,  PATHINFO_EXTENSION) !== 'less') {
 					if (is_file($cssFile)) {
 						$cssFiles[] = GeneralUtility::getIndpEnv('TYPO3_SITE_URL') . PathUtility::stripPathSitePrefix($cssFile) . '?' . filemtime($cssFile);
 					} else if (GeneralUtility::isValidUrl($cssFile)) {
@@ -108,12 +106,11 @@ class TinyMce4RteBase extends \SGalinski\Tinymce4Rte\Editors\RteBase {
 					continue;
 				}
 
-				// Get compiler context if set.
-				$context = isset($matches[2]) ? $matches[2] : NULL;
-				$absolutePathAndFilename = GeneralUtility::getFileAbsFileName($matches[1]);
-				$configuration = \AdGrafik\AdxLess\Utility\LessUtility::getConfiguration($thePidValue, $context);
+				$configuration = \AdGrafik\AdxLess\Utility\LessUtility::getConfiguration($thePidValue);
+				$configuration['returnUri'] = 'siteURL';
+				$compiledPathAndFilename = $less->compile($cssFile, $configuration);
 
-				$cssFiles[] = GeneralUtility::getIndpEnv('TYPO3_SITE_URL') . $less->compile($absolutePathAndFilename, $configuration) . '?' . filemtime($cssFile);
+				$cssFiles[] = $compiledPathAndFilename . '?' . filemtime($cssFile);
 			}
 
 			if (count($cssFiles)) {

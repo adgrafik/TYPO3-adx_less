@@ -13,26 +13,22 @@ plugin.tx_adxless {
 
 		# Define the path for writing the parsed file.
 		# By default it will be saved in the given 'cacheDirectory' with the name format 'filename.sha1.css'.
-#		targetFile = 
-	}
-	
-	render-in-another-context < .lessphp
-	render-in-another-context {
-		variables {
-			light-blue = @nice-blue + #444
-		}
+#		targetFilename = 
 	}
 }
 
 page.headerData.1367742474 = COA
 page.headerData.1367742474 {
 
-	# Set the USER content object where you want. The function addLess will generate the CSS file and append it with the PageRenderer.
+	# Set the USER content object where you want. The function includeCss will generate the CSS file and append it with the PageRenderer.
 	10 = USER
-	10.userFunc = EXT:adx_less/Classes/Less.php:AdGrafik\AdxLess\Less->addLess
-	10.less.configuration =< plugin.tx_adxless.default
-	10.less.file = EXT:adx_less/Resources/Private/LESS/Example/Styles.less
-	10.less.data (
+	10.userFunc = EXT:adx_less/Classes/Less.php:AdGrafik\AdxLess\Utility\LessUtility->includeCss
+	10.compilerSettings =< plugin.tx_adxless.lessphp
+	10.includeCssSettings {
+		media = print
+	}
+	10.file = EXT:adx_less/Resources/Private/LESS/Example/Styles.less
+	10.data (
 body {
   border: 1px solid @nice-blue;
 }

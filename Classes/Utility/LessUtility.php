@@ -54,11 +54,7 @@ class LessUtility {
 	 * @param mixed $contentObject Page ID or content object tslib_cObj
 	 * @return array
 	 */
-	public static function getConfiguration($contentObject, $key = NULL) {
-
-		if ($key === NULL) {
-			$key = 'lessphp';
-		}
+	public static function getConfiguration($contentObject) {
 
 		if (self::$configuration === NULL) {
 
@@ -91,28 +87,64 @@ class LessUtility {
 			}
 		}
 
-		return $key ? self::$configuration[$key . '.'] : self::$configuration;
+		return self::$configuration['lessphp.'];
 	}
 
 	/**
 	 * Add LESS file to the HTML
 	 * 
-	 * @param string $file
+	 * @param string $content
+	 * @param array $configuration
+	 * @return string
+	 */
+	public static function includeCss($content, $configuration) {
+
+		$less = GeneralUtility::makeInstance('AdGrafik\\AdxLess\\Less');
+
+		$compilerSettings = isset($settings['compilerSettings']) ? $settings['compilerSettings'] : array();
+		// returnUri can not be FALSE or "absolute".
+		$compilerSettings['returnUri'] = isset($compilerSettings['returnUri']) ? $compilerSettings['returnUri'] : TRUE;
+		$compilerSettings['returnUri'] = ($compilerSettings['returnUri'] === TRUE || $compilerSettings['returnUri'] === 'siteURL') ? $returnUri : TRUE;
+
+		$includeCssSettings = isset($settings['includeCssSettings']) ? $settings['includeCssSettings'] : array();
+		$includeCssSettings['media'] = isset($includeCssSettings['media']) ? $includeCssSettings['media'] : 'all';
+		$includeCssSettings['title'] = isset($includeCssSettings['title']) ? $includeCssSettings['title'] : '';
+		$includeCssSettings['compress'] = isset($includeCssSettings['compress']) ? (boolean) $includeCssSettings['compress'] : TRUE;
+		$includeCssSettings['forceOnTop'] = isset($includeCssSettings['forceOnTop']) ? (boolean) $includeCssSettings['forceOnTop'] : FALSE;
+		$includeCssSettings['allWrap'] = isset($includeCssSettings['allWrap']) ? $includeCssSettings['allWrap'] : '';
+		$includeCssSettings['excludeFromConcatenation'] = isset($includeCssSettings['excludeFromConcatenation']) ? (boolean) $includeCssSettings['excludeFromConcatenation'] : FALSE;
+
+		if (isset($configuration['file'])) {
+			$compiledPathAndFilename = $less->compile($configuration['file'], $compilerSettings);
+		}
+
+		self::addCssFile($compiledPathAndFilename, $includeCssSettings);
+
+		if (isset($configuration['data'])) {
+			$compiledPathAndFilename = $less->compile($configuration['data'], $compilerSettings);
+		}
+
+		self::addCssFile($compiledPathAndFilename, $includeCssSettings);
+
+		return $content;
+	}
+
+	/**
+	 * @param string $pathAndFilename
 	 * @param array $configuration
 	 * @return void
 	 */
-	public static function addLessFile($file, $configuration = array()) {
-
+	protected static function addCssFile($pathAndFilename, $includeCssSettings) {
 		$pageRenderer = $GLOBALS['TSFE']->getPageRenderer();
 		$pageRenderer->addCssFile(
-			$file,
+			$pathAndFilename,
 			'stylesheet',
-			$configuration['media'] ? $configuration['media'] : 'all',
-			$configuration['title'] ? $configuration['title'] : '',
-			$configuration['compress'] ? $configuration['compress'] : TRUE,
-			$configuration['forceOnTop'] ? $configuration['forceOnTop'] : FALSE,
-			$configuration['allWrap'] ? $configuration['allWrap'] : '',
-			$excludeFromConcatenation = $configuration['excludeFromConcatenation'] ? $configuration['excludeFromConcatenation'] : FALSE
+			$includeCssSettings['media'],
+			$includeCssSettings['title'],
+			$includeCssSettings['compress'],
+			$includeCssSettings['forceOnTop'],
+			$includeCssSettings['allWrap'],
+			$includeCssSettings['excludeFromConcatenation']
 		);
 	}
 

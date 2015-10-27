@@ -25,6 +25,8 @@ namespace AdGrafik\AdxLess\XClass;
  *  This copyright notice MUST APPEAR in all copies of the script!
  ***************************************************************/
 
+use TYPO3\CMS\Core\Utility\GeneralUtility;
+use AdGrafik\AdxLess\Utility\LessUtility;
 
 class TinyMceRteBase extends \tx_tinymce_rte_base {
 
@@ -39,24 +41,18 @@ class TinyMceRteBase extends \tx_tinymce_rte_base {
 		}
 
 		$cssFiles = array();
-		$less = \TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance('AdGrafik\\AdxLess\\Less');
-		$files = \TYPO3\CMS\Core\Utility\GeneralUtility::trimExplode(',', $parameters['content_css']);
+		$less = GeneralUtility::makeInstance('AdGrafik\\AdxLess\\Less');
+		$files = GeneralUtility::trimExplode(',', $parameters['content_css']);
 		foreach ($files as $pathAndFilename) {
 
-			$result = preg_match('/^(.*\.less)(?:\?+.*(?:lessCompilerContext=([^&]*)))?.*$/', $pathAndFilename, $matches);
-
 			// If not a LESS file, nothing else to do.
-			if ($result === 0) {
+			if (pathinfo($pathAndFilename,  PATHINFO_EXTENSION) !== 'less') {
 				$cssFiles[] = $pathAndFilename;
 				continue;
 			}
 
-			// Get compiler context if set.
-			$context = isset($matches[2]) ? $matches[2] : NULL;
-			$absolutePathAndFilename = \TYPO3\CMS\Core\Utility\GeneralUtility::getFileAbsFileName($matches[1]);
-			$configuration = \AdGrafik\AdxLess\Utility\LessUtility::getConfiguration($this->currentPage, $context);
-
-			$cssFiles[] = $less->compile($absolutePathAndFilename, $configuration);
+			$configuration = LessUtility::getConfiguration($this->currentPage);
+			$cssFiles[] = $less->compile($pathAndFilename, $configuration);
 		}
 
 		if (count($cssFiles)) {

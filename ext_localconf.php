@@ -2,24 +2,28 @@
 if (!defined ('TYPO3_MODE')) die ('Access denied.');
 
 // Set cache configuration.
-$TYPO3_CONF_VARS['SYS']['caching']['cacheConfigurations']['adx_less'] = array(
+$GLOBALS['TYPO3_CONF_VARS']['SYS']['caching']['cacheConfigurations']['adx_less'] = array(
 	'frontend' => 'TYPO3\\CMS\\Core\\Cache\\Frontend\\VariableFrontend',
 	'backend' => 'TYPO3\\CMS\\Core\\Cache\\Backend\\FileBackend',
 );
 
 // Register page renderer hook.
 if (TYPO3_MODE == 'FE') {
-	$TYPO3_CONF_VARS['SC_OPTIONS']['t3lib/class.t3lib_pagerenderer.php']['render-preProcess']['adx_less'] = 'EXT:adx_less/Classes/Hooks/PageRenderer.php:&AdGrafik\AdxLess\Hooks\PageRenderer->preProcess';
+	$GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['t3lib/class.t3lib_pagerenderer.php']['render-preProcess']['adx_less'] = 'AdGrafik\\AdxLess\\Hooks\\PageRenderer->preProcess';
 }
 
+// Register clear cache hook.
+$GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['t3lib/class.t3lib_tcemain.php']['clearCachePostProc'][] = 'AdGrafik\\AdxLess\\Hooks\\T3libTceMainHook->clearCachePostProc';
+
+
 // Add XCLASS to rtehtmlarea, tinymce_rte and tinymce for tinymce4_rte.
-$TYPO3_CONF_VARS['SYS']['Objects']['TYPO3\\CMS\\Rtehtmlarea\\RteHtmlAreaBase'] = array(
+$GLOBALS['TYPO3_CONF_VARS']['SYS']['Objects']['TYPO3\\CMS\\Rtehtmlarea\\RteHtmlAreaBase'] = array(
 	'className' => 'AdGrafik\\AdxLess\\XClass\\RteHtmlAreaBase',
 );
-$TYPO3_CONF_VARS['SYS']['Objects']['tx_tinymce_rte_base'] = array(
+$GLOBALS['TYPO3_CONF_VARS']['SYS']['Objects']['tx_tinymce_rte_base'] = array(
 	'className' => 'AdGrafik\\AdxLess\\XClass\\TinyMceRteBase',
 );
-$TYPO3_CONF_VARS['SYS']['Objects']['SGalinski\\Tinymce4Rte\\Editors\\RteBase'] = array(
+$GLOBALS['TYPO3_CONF_VARS']['SYS']['Objects']['SGalinski\\Tinymce4Rte\\Editors\\RteBase'] = array(
 	'className' => 'AdGrafik\\AdxLess\\XClass\\TinyMce4RteBase',
 );
 
