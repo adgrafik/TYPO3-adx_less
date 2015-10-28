@@ -33,17 +33,17 @@ strictMath | Whether math has to be within parenthesis. | `boolean` | `FALSE`
 
 	plugin.tx_adxless {
 	
-		lessphp {
-			variables {
-				nice-blue = #5B83AD
-				light-blue = @nice-blue + #111
-			}
-	
-			# Comma seperated string or array with path => directory.
-			# @see http://lessphp.gpeasy.com/
-			importDirectories = 
+		variables {
+			nice-blue = #5B83AD
+			light-blue = @nice-blue + #111
 		}
+
+		# Comma seperated string or array with path => directory.
+		# @see http://lessphp.gpeasy.com/
+		importDirectories = 
 	}
+
+**Important!** Property `lessphp` has been removed since v1.1.1. Set `plugin.tx_adxless < plugin.tx_adxless.lessphp` in the TypoScript for backwards compatibility.
 
 
 ### USER-cObject
@@ -54,7 +54,7 @@ strictMath | Whether math has to be within parenthesis. | `boolean` | `FALSE`
 		# Set the USER content object where you want. The function includeCss will generate the CSS file and append it with the PageRenderer.
 		10 = USER
 		10.userFunc = AdGrafik\AdxLess\Utility\LessUtility->includeCss
-		10.compilerSettings =< plugin.tx_adxless.lessphp
+		10.compilerSettings =< plugin.tx_adxless
 		10.includeCssSettings {
 			media = print
 		}

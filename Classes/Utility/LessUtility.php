@@ -88,7 +88,7 @@ class LessUtility {
 			}
 		}
 
-		return self::$configuration['lessphp.'];
+		return self::$configuration;
 	}
 
 	/**

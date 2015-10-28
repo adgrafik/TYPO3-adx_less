@@ -1,20 +1,18 @@
 
 plugin.tx_adxless {
 
-	lessphp {
-		variables {
-			nice-blue = #5B83AD
-			light-blue = @nice-blue + #111
-		}
-
-		# Comma seperated string or array with path => directory.
-		# @see http://lessphp.gpeasy.com/
-		importDirectories = 
-
-		# Define the path for writing the parsed file.
-		# By default it will be saved in the given 'cacheDirectory' with the name format 'filename.sha1.css'.
-#		targetFilename = 
+	variables {
+		nice-blue = #5B83AD
+		light-blue = @nice-blue + #111
 	}
+
+	# Comma seperated string or array with path => directory.
+	# @see http://lessphp.gpeasy.com/
+	importDirectories = 
+
+	# Define the path for writing the parsed file.
+	# By default it will be saved in the given 'cacheDirectory' with the name format 'filename.sha1.css'.
+#	targetFilename = 
 }
 
 page.headerData.1367742474 = COA
@@ -23,7 +21,7 @@ page.headerData.1367742474 {
 	# Set the USER content object where you want. The function includeCss will generate the CSS file and append it with the PageRenderer.
 	10 = USER
 	10.userFunc = AdGrafik\AdxLess\Utility\LessUtility->includeCss
-	10.compilerSettings =< plugin.tx_adxless.lessphp
+	10.compilerSettings =< plugin.tx_adxless
 	10.includeCssSettings {
 		media = print
 	}
