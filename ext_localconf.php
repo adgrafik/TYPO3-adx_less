@@ -9,7 +9,7 @@ $GLOBALS['TYPO3_CONF_VARS']['SYS']['caching']['cacheConfigurations']['adx_less']
 
 // Register page renderer hook.
 if (TYPO3_MODE == 'FE') {
-	$GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['t3lib/class.t3lib_pagerenderer.php']['render-preProcess']['adx_less'] = 'AdGrafik\\AdxLess\\Hooks\\PageRenderer->preProcess';
+	$GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['t3lib/class.t3lib_pagerenderer.php']['render-preProcess']['adx_less'] = 'AdGrafik\\AdxLess\\Hooks\\PageRendererHook->preProcess';
 }
 
 // Register clear cache hook.

@@ -29,7 +29,7 @@ use TYPO3\CMS\Core\Page\PageRenderer;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use AdGrafik\AdxLess\Utility\LessUtility;
 
-class PageRenderer {
+class PageRendererHook {
 
 	/**
 	 * Hook function for parse files with the suffix ".less".
