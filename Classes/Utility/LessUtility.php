@@ -26,30 +26,14 @@ namespace AdGrafik\AdxLess\Utility;
  ***************************************************************/
 
 use TYPO3\CMS\Core\Utility\GeneralUtility;
+use TYPO3\CMS\Extbase\Configuration\ConfigurationManager;
 
 class LessUtility {
-
-	/**
-	 * @var array $extensionConfiguration
-	 */
-	protected static $extensionConfiguration;
 
 	/**
 	 * @var array $configuration
 	 */
 	protected static $configuration;
-
-	/**
-	 * Get the configuration of adx_less
-	 * 
-	 * @return array
-	 */
-	public static function getExtensionConfiguration() {
-		if (self::$extensionConfiguration === NULL) {
-			self::$extensionConfiguration = (array) @unserialize($GLOBALS['TYPO3_CONF_VARS']['EXT']['extConf']['adx_less']);
-		}
-		return self::$extensionConfiguration;
-	}
 
 	/**
 	 * @param mixed $contentObject Page ID or content object tslib_cObj
@@ -65,7 +49,7 @@ class LessUtility {
 				$configurationManager = $objectManager->get('TYPO3\\CMS\\Extbase\\Configuration\\ConfigurationManager');
 				$configurationManager->setContentObject($contentObject);
 				self::$configuration = $configurationManager->getConfiguration(
-					\TYPO3\CMS\Extbase\Configuration\ConfigurationManager::CONFIGURATION_TYPE_FULL_TYPOSCRIPT
+					ConfigurationManager::CONFIGURATION_TYPE_FULL_TYPOSCRIPT
 				);
 
 				self::$configuration = isset(self::$configuration['plugin.']['tx_adxless.'])
@@ -98,23 +82,16 @@ class LessUtility {
 	 * @param array $configuration
 	 * @return string
 	 */
-	public static function includeCss($content, $configuration) {
+	public static function includeCss($content, array $configuration = array()) {
 
 		$less = GeneralUtility::makeInstance('AdGrafik\\AdxLess\\Less');
 
+		$includeCssSettings = isset($configuration['includeCssSettings.']) ? $configuration['includeCssSettings.'] : array();
 		$compilerSettings = isset($configuration['compilerSettings.']) ? $configuration['compilerSettings.'] : array();
 
 		// returnUri can not be FALSE or "absolute".
 		$compilerSettings['returnUri'] = isset($compilerSettings['returnUri']) ? $compilerSettings['returnUri'] : TRUE;
 		$compilerSettings['returnUri'] = ($compilerSettings['returnUri'] === TRUE || $compilerSettings['returnUri'] === 'siteURL') ? $returnUri : TRUE;
-
-		$includeCssSettings = isset($configuration['includeCssSettings.']) ? $configuration['includeCssSettings.'] : array();
-		$includeCssSettings['media'] = isset($includeCssSettings['media']) ? $includeCssSettings['media'] : 'all';
-		$includeCssSettings['title'] = isset($includeCssSettings['title']) ? $includeCssSettings['title'] : '';
-		$includeCssSettings['compress'] = isset($includeCssSettings['compress']) ? (boolean) $includeCssSettings['compress'] : TRUE;
-		$includeCssSettings['forceOnTop'] = isset($includeCssSettings['forceOnTop']) ? (boolean) $includeCssSettings['forceOnTop'] : FALSE;
-		$includeCssSettings['allWrap'] = isset($includeCssSettings['allWrap']) ? $includeCssSettings['allWrap'] : '';
-		$includeCssSettings['excludeFromConcatenation'] = isset($includeCssSettings['excludeFromConcatenation']) ? (boolean) $includeCssSettings['excludeFromConcatenation'] : FALSE;
 
 		if (isset($configuration['file'])) {
 			$compiledPathAndFilename = $less->compile($configuration['file'], $compilerSettings);
@@ -133,20 +110,20 @@ class LessUtility {
 
 	/**
 	 * @param string $pathAndFilename
-	 * @param array $configuration
+	 * @param array $includeCssSettings
 	 * @return void
 	 */
-	protected static function addCssFile($pathAndFilename, $includeCssSettings) {
+	public static function addCssFile($pathAndFilename, array $includeCssSettings = array()) {
 		$pageRenderer = $GLOBALS['TSFE']->getPageRenderer();
 		$pageRenderer->addCssFile(
 			$pathAndFilename,
 			'stylesheet',
-			$includeCssSettings['media'],
-			$includeCssSettings['title'],
-			$includeCssSettings['compress'],
-			$includeCssSettings['forceOnTop'],
-			$includeCssSettings['allWrap'],
-			$includeCssSettings['excludeFromConcatenation']
+			isset($includeCssSettings['media']) ? $includeCssSettings['media'] : 'all',
+			isset($includeCssSettings['title']) ? $includeCssSettings['title'] : '',
+			isset($includeCssSettings['compress']) ? (boolean) $includeCssSettings['compress'] : TRUE,
+			isset($includeCssSettings['forceOnTop']) ? (boolean) $includeCssSettings['forceOnTop'] : FALSE,
+			isset($includeCssSettings['allWrap']) ? $includeCssSettings['allWrap'] : '',
+			isset($includeCssSettings['excludeFromConcatenation']) ? (boolean) $includeCssSettings['excludeFromConcatenation'] : FALSE
 		);
 	}
 

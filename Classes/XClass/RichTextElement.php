@@ -25,24 +25,19 @@ namespace AdGrafik\AdxLess\XClass;
  *  This copyright notice MUST APPEAR in all copies of the script!
  ***************************************************************/
 
+use TYPO3\CMS\Rtehtmlarea\Form\Element\RichTextElement;
+use TYPO3\CMS\Core\Utility\GeneralUtility;
+use AdGrafik\AdxLess\Utility\LessUtility;
 
-class RichTextElement extends \TYPO3\CMS\Rtehtmlarea\Form\Element\RichTextElement {
-
-	/**
-	 * @return string
-	 */
-	public function render() {
-
-		return parent::render();
-	}
+class RichTextElement extends RichTextElement {
 
 	/**
-	 * @return string
+	 * @return array
 	 */
 	protected function getContentCssFileNames() {
 
-		$less = \TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance('AdGrafik\\AdxLess\\Less');
-		$configuration = \AdGrafik\AdxLess\Utility\LessUtility::getConfiguration($this->pidOfPageRecord);
+		$less = GeneralUtility::makeInstance('AdGrafik\\AdxLess\\Less');
+		$configuration = LessUtility::getConfiguration($this->pidOfPageRecord);
 
 		if (isset($this->processedRteConfiguration['contentCSS'])) {
 			$this->processedRteConfiguration['contentCSS'] = $less->compile($this->processedRteConfiguration['contentCSS'], $configuration);

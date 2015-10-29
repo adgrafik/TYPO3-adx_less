@@ -20,7 +20,7 @@ To delete or regenerate compiled files proceed the "Flush general caches".
 property | description | type | default
 -------- | ----------- | ---- | -------
 variables | Array of variables which schould be included to the compiler. Set the variable name as key and without `@`. | `array` | `NULL`
-importDirectories | Comma seperated string and/or array of directories where should be look at `@import`. | `array|string` | `NULL`
+importDirectories | Comma seperated string and/or array of directories where should be look at `@import`. @see http://lessphp.gpeasy.com/ | `array|string` | `NULL`
 targetFilename | If set the compiler will save the file with this name. | `string` | `NULL`
 returnUri | If the keyword `absolute` is set, the compiler returns the absolute path to the file. If set to `siteURL` it returns the complete URL with `TYPO3_SITE_URL`. If `TRUE` the returned value is the relative path, else if `FALSE` it will return the parsed content. | `boolean|string` | `NULL`
 compress | Set to `TRUE` if compiled CSS should be compressed. | `boolean` | `TRUE`

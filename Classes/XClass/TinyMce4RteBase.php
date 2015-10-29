@@ -26,14 +26,16 @@ namespace AdGrafik\AdxLess\XClass;
  ***************************************************************/
 
 use SGalinski\Tinymce\Loader;
+use SGalinski\Tinymce4Rte\Editors\RteBase;
 use TYPO3\CMS\Backend\Form\FormEngine;
 use TYPO3\CMS\Backend\Rte\AbstractRte;
 use TYPO3\CMS\Backend\Utility\BackendUtility;
 use TYPO3\CMS\Core\Page\PageRenderer;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Core\Utility\PathUtility;
+use AdGrafik\AdxScss\Utility\LessUtility;
 
-class TinyMce4RteBase extends \SGalinski\Tinymce4Rte\Editors\RteBase {
+class TinyMce4RteBase extends RteBase {
 
 	/**
 	 * Draws the RTE as a form field or whatever is needed (inserts JavaApplet, creates iframe, renders ....)
@@ -51,7 +53,7 @@ class TinyMce4RteBase extends \SGalinski\Tinymce4Rte\Editors\RteBase {
 	 * @param integer $thePidValue PID value of record (true parent page id)
 	 * @return string HTML code for RTE!
 	 */
-	public function drawRTE(\TYPO3\CMS\Backend\Form\FormEngine $parentObject, $table, $field, $row, $PA, $specConf, $thisConfig, $RTEtypeVal, $RTErelPath, $thePidValue) {
+	public function drawRTE(FormEngine $parentObject, $table, $field, $row, $PA, $specConf, $thisConfig, $RTEtypeVal, $RTErelPath, $thePidValue) {
 		/** @var PageRenderer $pageRenderer */
 		$pageRenderer = $GLOBALS['SOBE']->doc->getPageRenderer();
 
@@ -106,7 +108,7 @@ class TinyMce4RteBase extends \SGalinski\Tinymce4Rte\Editors\RteBase {
 					continue;
 				}
 
-				$configuration = \AdGrafik\AdxLess\Utility\LessUtility::getConfiguration($thePidValue);
+				$configuration = LessUtility::getConfiguration($thePidValue);
 				$configuration['returnUri'] = 'siteURL';
 				$compiledPathAndFilename = $less->compile($cssFile, $configuration);
 

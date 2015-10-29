@@ -25,8 +25,11 @@ namespace AdGrafik\AdxLess\XClass;
  *  This copyright notice MUST APPEAR in all copies of the script!
  ***************************************************************/
 
+use TYPO3\CMS\Rtehtmlarea\RteHtmlAreaBase;
+use TYPO3\CMS\Core\Utility\GeneralUtility;
+use AdGrafik\AdxLess\Utility\LessUtility;
 
-class RteHtmlAreaBase extends \TYPO3\CMS\Rtehtmlarea\RteHtmlAreaBase {
+class RteHtmlAreaBase extends RteHtmlAreaBase {
 
 	/**
 	 * @return string
@@ -66,8 +69,8 @@ class RteHtmlAreaBase extends \TYPO3\CMS\Rtehtmlarea\RteHtmlAreaBase {
 			return $contentCssFile;
 		}
 
-		$configuration = \AdGrafik\AdxLess\Utility\LessUtility::getConfiguration($this->thePid);
-		$less = \TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance('AdGrafik\\AdxLess\\Less');
+		$configuration = LessUtility::getConfiguration($this->thePid);
+		$less = GeneralUtility::makeInstance('AdGrafik\\AdxLess\\Less');
 
 		return $less->compile($absolutePathAndFilename, $configuration);
 	}

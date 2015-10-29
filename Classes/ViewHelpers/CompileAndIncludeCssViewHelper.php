@@ -25,24 +25,27 @@ namespace AdGrafik\AdxLess\ViewHelpers;
  *  This copyright notice MUST APPEAR in all copies of the script!
  ***************************************************************/
 
+use TYPO3\CMS\Fluid\Core\ViewHelper\AbstractViewHelper;
+use TYPO3\CMS\Core\Utility\GeneralUtility;
+use AdGrafik\AdxLess\Utility\LessUtility;
 
-class CompileAndIncludeCssViewHelper extends \TYPO3\CMS\Fluid\Core\ViewHelper\AbstractViewHelper {
+class CompileAndIncludeCssViewHelper extends AbstractViewHelper {
 
 	/**
-	 * @param string $data
-	 * @param array $variables
-	 * @param mixed $importDirectories Comma seperated string or array with path => directory. @see http://lessphp.gpeasy.com/
-	 * @param string $targetFilename
-	 * @param mixed $returnUri
-	 * @param boolean $compress
-	 * @param boolean $relativeUrls Disable relativeUrls and set resource URLs relative to the cache directory to prevent unwanted side effects.
-	 * @param boolean $strictUnits
-	 * @param boolean $strictMath
-	 * @param array $includeCssSettings
+	 * @param string $data LESS data or path and filename to the LESS file.
+	 * @param array $variables Array of variables which schould be included to the compiler. Set the variable name as key and without "@".
+	 * @param mixed $importDirectories Comma seperated string and/or array of directories where should be look at @import. @see http://lessphp.gpeasy.com/
+	 * @param string $targetFilename If set the compiler will save the file with this name.
+	 * @param mixed $returnUri If the keyword "absolute" is set, the compiler returns the absolute path to the file. If set to "siteURL" it returns the complete URL with TYPO3_SITE_URL. If TRUE the returned value is the relative path, else if FALSE it will return the parsed content.
+	 * @param boolean $compress Set to TRUE if compiled CSS should be compressed.
+	 * @param boolean $relativeUrls Whether to adjust URL's to be relative.
+	 * @param boolean $strictUnits Whether units need to evaluate correctly.
+	 * @param boolean $strictMath Whether math has to be within parenthesis.
+	 * @param array $includeCssSettings Same as TYPO3 property "page.includeCss" but without "stdWrap".
 	 * @return string
 	 * @api
 	 */
-	public function render($data = NULL, array $variables = NULL, $importDirectories = NULL, $targetFilename = NULL, $returnUri = TRUE, $compress = NULL, $relativeUrls = NULL, $strictUnits = NULL, $strictMath = NULL, array $includeCssSettings = NULL) {
+	public function render($data = NULL, array $variables = NULL, $importDirectories = NULL, $targetFilename = NULL, $returnUri = TRUE, $compress = NULL, $relativeUrls = NULL, $strictUnits = NULL, $strictMath = NULL, array $includeCssSettings = array()) {
 
 		if ($data === NULL) {
 			$data = $this->renderChildren();
@@ -52,31 +55,21 @@ class CompileAndIncludeCssViewHelper extends \TYPO3\CMS\Fluid\Core\ViewHelper\Ab
 		}
 
 		$configuration = array(
-			'compress' => $compress,
 			'variables' => $variables,
 			'importDirectories' => $importDirectories,
-			'relativeUrls' => $relativeUrls,
-			'strictUnits' => $strictUnits,
-			'strictMath' => $strictMath,
 			'targetFilename' => $targetFilename,
 			// returnUri can not be FALSE or "absolute".
 			'returnUri' => ($returnUri === TRUE || $returnUri === 'siteURL') ? $returnUri : TRUE,
+			'compress' => $compress,
+			'relativeUrls' => $relativeUrls,
+			'strictUnits' => $strictUnits,
+			'strictMath' => $strictMath,
 		);
 
-		$less = \TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance('AdGrafik\\AdxLess\\Less');
+		$less = GeneralUtility::makeInstance('AdGrafik\\AdxLess\\Less');
 		$content = $less->compile($data, $configuration);
 
-		$pageRenderer = $GLOBALS['TSFE']->getPageRenderer();
-		$pageRenderer->addCssFile(
-			$content,
-			'stylesheet',
-			$includeCssSettings['media'] ? $includeCssSettings['media'] : 'all',
-			$includeCssSettings['title'] ? $includeCssSettings['title'] : '',
-			$includeCssSettings['compress'] ? $includeCssSettings['compress'] : TRUE,
-			$includeCssSettings['forceOnTop'] ? $configuration['forceOnTop'] : FALSE,
-			$includeCssSettings['allWrap'] ? $includeCssSettings['allWrap'] : '',
-			$includeCssSettings['excludeFromConcatenation'] ? $includeCssSettings['excludeFromConcatenation'] : FALSE
-		);
+		LessUtility::addCssFile($content, $includeCssSettings);
 
 		return '';
 	}

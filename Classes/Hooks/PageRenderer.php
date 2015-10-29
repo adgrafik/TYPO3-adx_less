@@ -25,6 +25,7 @@ namespace AdGrafik\AdxLess\Hooks;
  *  This copyright notice MUST APPEAR in all copies of the script!
  ***************************************************************/
 
+use TYPO3\CMS\Core\Page\PageRenderer;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use AdGrafik\AdxLess\Utility\LessUtility;
 
@@ -37,7 +38,7 @@ class PageRenderer {
 	 * @param \TYPO3\CMS\Core\Page\PageRenderer $parentObject
 	 * @return void
 	 */
-	public function preProcess($parameters, \TYPO3\CMS\Core\Page\PageRenderer $parentObject) {
+	public function preProcess($parameters, PageRenderer $parentObject) {
 
 		$less = GeneralUtility::makeInstance('AdGrafik\\AdxLess\\Less');
 		$cssFiles = array();

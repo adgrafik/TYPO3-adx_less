@@ -153,7 +153,7 @@ class Less implements \TYPO3\CMS\Core\SingletonInterface {
 		if ($returnUri === 'absolute') {
 			$result = $absoluteWritePathAndFilename;
 		} else if ($returnUri === 'siteURL') {
-			return str_replace(PATH_site, GeneralUtility::getIndpEnv('TYPO3_SITE_URL'), $absoluteWritePathAndFilename);
+			$result = str_replace(PATH_site, GeneralUtility::getIndpEnv('TYPO3_SITE_URL'), $absoluteWritePathAndFilename);
 		} else if ($returnUri) {
 			$result = str_replace(PATH_site, '', $absoluteWritePathAndFilename);
 		} else {

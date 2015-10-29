@@ -25,19 +25,21 @@ namespace AdGrafik\AdxLess\ViewHelpers;
  *  This copyright notice MUST APPEAR in all copies of the script!
  ***************************************************************/
 
+use TYPO3\CMS\Fluid\Core\ViewHelper\AbstractViewHelper;
+use TYPO3\CMS\Core\Utility\GeneralUtility;
 
-class CompileViewHelper extends \TYPO3\CMS\Fluid\Core\ViewHelper\AbstractViewHelper {
+class CompileViewHelper extends AbstractViewHelper {
 
 	/**
-	 * @param string $data
-	 * @param array $variables
-	 * @param mixed $importDirectories Comma seperated string or array with path => directory. @see http://lessphp.gpeasy.com/
-	 * @param string $targetFilename
-	 * @param mixed $returnUri
-	 * @param boolean $compress
-	 * @param boolean $relativeUrls Disable relativeUrls and set resource URLs relative to the cache directory to prevent unwanted side effects.
-	 * @param boolean $strictUnits
-	 * @param boolean $strictMath
+	 * @param string $data LESS data or path and filename to the LESS file.
+	 * @param array $variables Array of variables which schould be included to the compiler. Set the variable name as key and without "@".
+	 * @param mixed $importDirectories Comma seperated string and/or array of directories where should be look at @import. @see http://lessphp.gpeasy.com/
+	 * @param string $targetFilename If set the compiler will save the file with this name.
+	 * @param mixed $returnUri If the keyword "absolute" is set, the compiler returns the absolute path to the file. If set to "siteURL" it returns the complete URL with TYPO3_SITE_URL. If TRUE the returned value is the relative path, else if FALSE it will return the parsed content.
+	 * @param boolean $compress Set to TRUE if compiled CSS should be compressed.
+	 * @param boolean $relativeUrls Whether to adjust URL's to be relative.
+	 * @param boolean $strictUnits Whether units need to evaluate correctly.
+	 * @param boolean $strictMath Whether math has to be within parenthesis.
 	 * @return string
 	 * @api
 	 */
@@ -51,17 +53,17 @@ class CompileViewHelper extends \TYPO3\CMS\Fluid\Core\ViewHelper\AbstractViewHel
 		}
 
 		$configuration = array(
-			'compress' => $compress,
 			'variables' => $variables,
 			'importDirectories' => $importDirectories,
+			'targetFilename' => $targetFilename,
+			'returnUri' => $returnUri,
+			'compress' => $compress,
 			'relativeUrls' => $relativeUrls,
 			'strictUnits' => $strictUnits,
 			'strictMath' => $strictMath,
-			'targetFilename' => $targetFilename,
-			'returnUri' => $returnUri,
 		);
 
-		$less = \TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance('AdGrafik\\AdxLess\\Less');
+		$less = GeneralUtility::makeInstance('AdGrafik\\AdxLess\\Less');
 		$content = $less->compile($data, $configuration);
 
 		return $content;
