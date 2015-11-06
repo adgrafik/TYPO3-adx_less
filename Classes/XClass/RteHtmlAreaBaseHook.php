@@ -29,7 +29,7 @@ use TYPO3\CMS\Rtehtmlarea\RteHtmlAreaBase;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use AdGrafik\AdxLess\Utility\LessUtility;
 
-class RteHtmlAreaBase extends RteHtmlAreaBase {
+class RteHtmlAreaBaseHook extends RteHtmlAreaBase {
 
 	/**
 	 * @return string

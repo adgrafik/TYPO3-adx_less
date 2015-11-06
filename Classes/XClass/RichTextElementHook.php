@@ -29,7 +29,7 @@ use TYPO3\CMS\Rtehtmlarea\Form\Element\RichTextElement;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use AdGrafik\AdxLess\Utility\LessUtility;
 
-class RichTextElement extends RichTextElement {
+class RichTextElementHook extends RichTextElement {
 
 	/**
 	 * @return array
