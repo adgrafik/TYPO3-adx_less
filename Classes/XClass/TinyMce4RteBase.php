@@ -33,7 +33,7 @@ use TYPO3\CMS\Backend\Utility\BackendUtility;
 use TYPO3\CMS\Core\Page\PageRenderer;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Core\Utility\PathUtility;
-use AdGrafik\AdxScss\Utility\LessUtility;
+use AdGrafik\AdxLess\Utility\LessUtility;
 
 class TinyMce4RteBase extends RteBase {
 
