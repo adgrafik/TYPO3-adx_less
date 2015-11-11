@@ -65,7 +65,7 @@ class RteHtmlAreaBaseHook extends RteHtmlAreaBase {
 	private function parseLessFile($contentCssFile) {
 
 		// If not a LESS file, nothing else to do.
-		if (pathinfo($contentCssFile,  PATHINFO_EXTENSION) !== 'less') {
+		if (LessUtility::isValidFile($contentCssFile) === FALSE) {
 			return $contentCssFile;
 		}
 

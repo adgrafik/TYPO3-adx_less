@@ -99,7 +99,7 @@ class TinyMce4RteBase extends RteBase {
 				$cssFile = GeneralUtility::getFileAbsFileName($pathAndFilename);
 
 				// If not a LESS file, nothing else to do.
-				if (pathinfo($cssFile,  PATHINFO_EXTENSION) !== 'less') {
+				if (LessUtility::isValidFile($cssFile) === FALSE) {
 					if (is_file($cssFile)) {
 						$cssFiles[] = GeneralUtility::getIndpEnv('TYPO3_SITE_URL') . PathUtility::stripPathSitePrefix($cssFile) . '?' . filemtime($cssFile);
 					} else if (GeneralUtility::isValidUrl($cssFile)) {

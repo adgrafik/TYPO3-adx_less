@@ -39,14 +39,14 @@ class RichTextElementHook extends RichTextElement {
 		$less = GeneralUtility::makeInstance('AdGrafik\\AdxLess\\Less');
 		$configuration = LessUtility::getConfiguration($this->pidOfPageRecord);
 
-		if (isset($this->processedRteConfiguration['contentCSS'])) {
+		if (isset($this->processedRteConfiguration['contentCSS']) && LessUtility::isValidFile($this->processedRteConfiguration['contentCSS'])) {
 			$this->processedRteConfiguration['contentCSS'] = $less->compile($this->processedRteConfiguration['contentCSS'], $configuration);
 		}
 
 		if (is_array($this->processedRteConfiguration['contentCSS.'])) {
 			foreach ($this->processedRteConfiguration['contentCSS.'] as $key => $cssFile) {
 				// If not a LESS file, nothing else to do.
-				if (pathinfo($cssFile,  PATHINFO_EXTENSION) !== 'less') {
+				if (LessUtility::isValidFile($cssFile) === FALSE) {
 					continue;
 				}
 				$this->processedRteConfiguration['contentCSS.'][$key] = $less->compile($cssFile, $configuration);

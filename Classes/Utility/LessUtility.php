@@ -127,6 +127,13 @@ class LessUtility {
 		);
 	}
 
+	/**
+	 * @return array
+	 */
+	public static function isValidFile($file) {
+		return pathinfo($file, PATHINFO_EXTENSION) === 'less';
+	}
+
 }
 
 ?>
