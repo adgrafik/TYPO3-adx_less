@@ -13,14 +13,13 @@ class T3libTceMainHook {
 	 * @return void
 	 */
 	function clearCachePostProc($parameters, DataHandler $parentObject) {
-
-		if (isset($parameters['cacheCmd']) === FALSE) {
+		if (isset($parameters['cacheCmd']) === FALSE || $parameters['cacheCmd'] != 'system') {
 			return;
 		}
-
-		if ($parameters['cacheCmd'] == 'all') {
+        if ($parentObject->admin || $parentObject->BE_USER->getTSConfigVal('options.clearCache.system')
+            || ((boolean) $GLOBALS['TYPO3_CONF_VARS']['SYS']['clearCacheSystem'] === TRUE && $parentObject->admin)) {
 			$absoluteWritePath = GeneralUtility::getFileAbsFileName('typo3temp/tx_adxless/');
 			GeneralUtility::rmdir($absoluteWritePath, TRUE);
-		}
+        }
 	}
 }
