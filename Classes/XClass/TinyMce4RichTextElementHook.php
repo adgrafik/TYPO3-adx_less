@@ -41,7 +41,7 @@ class TinyMce4RichTextElementHook extends RichTextElement {
 		/** @var Loader $tinyMCE */
 		$tinyMCE = GeneralUtility::makeInstance(Loader::class);
 		$tinyMCE->loadConfiguration($this->vanillaRteTsConfig['properties']['default.']['tinymceConfiguration']);
-		$less = GeneralUtility::makeInstance('AdGrafik\\AdxLess\\Less');
+		$less = GeneralUtility::makeInstance(\AdGrafik\AdxLess\Less::class);
 		$configuration = LessUtility::getConfiguration($this->pidOfPageRecord);
 		$configuration['returnUri'] = 'siteURL';
 
@@ -79,6 +79,56 @@ class TinyMce4RichTextElementHook extends RichTextElement {
 		/** @var PageRenderer $pageRenderer */
 		$pageRenderer = GeneralUtility::makeInstance(PageRenderer::class);
 		$tinyMCE->loadJsViaPageRenderer($pageRenderer);
+	}
+
+	/**
+	 * Add RTE main scripts and plugin scripts
+	 *
+	 * @return void
+	 */
+	protected function loadRequireModulesForRTE() {
+		/** @var Loader $tinyMCE */
+		$tinyMCE = GeneralUtility::makeInstance(Loader::class);
+		$tinyMCE->loadConfiguration($this->vanillaRteTsConfig['properties']['default.']['tinymceConfiguration']);
+		$less = GeneralUtility::makeInstance(\AdGrafik\AdxLess\Less::class);
+		$configuration = LessUtility::getConfiguration($this->pidOfPageRecord);
+		$configuration['returnUri'] = 'siteURL';
+
+		// Get multiply sets of files.
+		$cssFiles = isset($this->vanillaRteTsConfig['properties']['default.']['contentCSS.'])
+			? $this->vanillaRteTsConfig['properties']['default.']['contentCSS.']
+			: array();
+		// Put single file on begining.
+		if (isset($this->vanillaRteTsConfig['properties']['default.']['contentCSS']) && empty($this->vanillaRteTsConfig['properties']['default.']['contentCSS']) !== FALSE) {
+			array_unshift($cssFiles, $this->vanillaRteTsConfig['properties']['default.']['contentCSS']);
+		}
+		foreach ($cssFiles as $key => $cssFile) {
+			if (LessUtility::isValidFile($cssFile)) {
+				$cssFiles[$key] = $less->compile($cssFile, $configuration);
+			} else {
+				$contentCssFile = GeneralUtility::getFileAbsFileName($cssFile);
+				if (is_file($contentCssFile)) {
+					$cssFiles[$key] = GeneralUtility::getIndpEnv('TYPO3_SITE_URL') . PathUtility::stripPathSitePrefix($contentCssFile) . '?' . filemtime($contentCssFile);
+				}
+			}
+		}
+		if (count($cssFiles)) {
+			$tinyMCE->addConfigurationOption('content_css', implode(',', $cssFiles));
+		}
+
+		$tinyMCE->addConfigurationOption(
+			'changeMethod', 'function() {
+				var TBE_EDITOR = window.TBE_EDITOR || null;
+				if (TBE_EDITOR && TBE_EDITOR.fieldChanged && typeof TBE_EDITOR.fieldChanged === \'function\') {
+					TBE_EDITOR.fieldChanged();
+				}
+			}'
+		);
+
+		$tinyMCE->addConfigurationOption('editornumber', $this->domIdentifier);
+
+		// IRRE
+		$this->resultArray['requireJsModules'] = $tinyMCE->loadJsViaRequireJS();
 	}
 
 }
