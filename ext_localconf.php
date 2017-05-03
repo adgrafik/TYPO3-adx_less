@@ -5,6 +5,7 @@ if (!defined ('TYPO3_MODE')) die ('Access denied.');
 $GLOBALS['TYPO3_CONF_VARS']['SYS']['caching']['cacheConfigurations']['adx_less'] = array(
 	'frontend' => 'TYPO3\\CMS\\Core\\Cache\\Frontend\\VariableFrontend',
 	'backend' => 'TYPO3\\CMS\\Core\\Cache\\Backend\\FileBackend',
+	'groups' => array('system'),
 );
 
 // Register page renderer hook.
