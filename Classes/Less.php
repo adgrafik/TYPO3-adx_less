@@ -113,7 +113,7 @@ class Less implements \TYPO3\CMS\Core\SingletonInterface {
 			}
 			$directories[$absolutePath] = str_replace(PATH_site, '', $absolutePath);
 		}
-		$importDirectories = $directories;
+		$importDirectories = (array) $directories;
 
 		$options = array(
 			'compress' => (isset($configuration['compress']) ? (boolean) $configuration['compress'] : TRUE),
